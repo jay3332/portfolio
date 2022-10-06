@@ -1,5 +1,4 @@
 import styled, {keyframes} from 'styled-components';
-import {createRef, useEffect, useState} from "react";
 
 const Gradient = keyframes`
   from {
@@ -13,112 +12,73 @@ const Gradient = keyframes`
   }
 `;
 
-const _ContainerBefore = styled.div`
-  width: 600px;
-  height: 600px;
-  transform: scale(0.5);
-  clip-path: url(#__jay3332_svg_clip);
-  background: var(--color-text);
-`;
-
-type ContainerProps = { offsetX: number, offsetY: number };
-
-const ContainerBefore = styled.div.attrs<ContainerProps>(props => {
-  return {
-    style: {
-      top: props.offsetY,
-      left: props.offsetX,
-    }
-  }
-})<ContainerProps>`
-  position: absolute;
-  filter: blur(128px);
-`;
+// For now, I won't use this glowing effect since that drastically hinders with performance.
+// const _ContainerBefore = styled.div`
+//   width: 600px;
+//   height: 600px;
+//   transform: scale(min(20vw, 300px) / 600px);
+//   clip-path: url(#__jay3332_svg_clip);
+//   background: var(--color-text);
+// `;
+//
+// const ContainerBefore = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   filter: blur(128px);
+// `;
 
 const Container = styled.div`
+  width: min(20vw, 300px);
+  height: min(20vw, 300px);
   animation: ${Gradient} 30s ease infinite;
-  background: linear-gradient(to bottom right,
-  #1aacff,
-  #e649ff,
-  #ffc67b,
-  #69ff6d,
-  #23edff,
-  #1aacff);
-  width: 600px;
-  height: 600px;
+  background: linear-gradient(
+    to bottom right,
+    #1aacff,
+    #e649ff,
+    #ff4e4e,
+    #ffce49,
+    #69ff6d,
+    #23edff,
+    #1aacff
+  );
   background-size: 600% 600%;
-  transform: scale(0.5);
   clip-path: url(#__jay3332_svg_clip);
-  transition: all 0.5s ease;
-
-  &:hover {
-    filter: brightness(125%) drop-shadow(0 0 16px var(--color-bg-0));
-    transform: rotate(8deg) scale(0.55);
-  }
-`;
-
-const ContainerWrapper = styled.div`
-  box-sizing: border-box;
-  position: absolute;
-`;
-
-const SvgContainer = styled.div`
-  position: relative;
-  margin: -150px;
-  width: 300px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   
-  svg {
-    transform: scale(0);
+  @media screen and (max-width: 768px) {
+    width: min(40vw, 300px);
+    height: min(40vw, 300px);
   }
 `;
 
-const clamp = (value: number): number => Math.max(Math.min(4, value), -4);
+const OuterContainer = styled.div`
+  transition: all 0.5s ease;
+  
+  &:hover {
+    filter: brightness(125%) drop-shadow(0 0 128px var(--color-text));
+    transform: rotate(8deg) scale(1.1);
+  }
+`;
 
 export default function Jay3332Svg() {
-  let [offsetX, setOffsetX] = useState(0);
-  let [offsetY, setOffsetY] = useState(0);
-  let containerRef = createRef<HTMLDivElement>();
-
-  useEffect(() => {
-    document.addEventListener('mousemove', (event) => {
-      let targetNode = containerRef.current;
-      if (targetNode == null) return;
-
-      let centerX = targetNode.clientLeft + targetNode.clientWidth / 2;
-      let centerY = targetNode.clientTop + targetNode.clientHeight / 2;
-
-      setOffsetX(clamp(event.clientX - centerX));
-      setOffsetY(clamp(event.clientY - centerY));
-    });
-  }, [containerRef]);
-
   return (
-    <SvgContainer>
-      <ContainerWrapper>
-        <ContainerBefore offsetX={offsetX} offsetY={offsetY}>
-          <_ContainerBefore />
-        </ContainerBefore>
-        <Container ref={containerRef} />
-      </ContainerWrapper>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+    <OuterContainer>
+      <Container />
+      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <clipPath id="__jay3332_svg_clip">
+          <clipPath id="__jay3332_svg_clip" clipPathUnits="objectBoundingBox">
             <path
-              d="M 61.082 369.798 C 59.201 380.059 58.219 390.632 58.219 401.433 C 58.219 497.812 136.467 576.06 232.846
-                576.06 C 329.226 576.06 407.474 497.812 407.474 401.433 C 407.474 397.75 407.36 394.094 407.135 390.468 L
-                407.135 390.468 L 407.135 154.822 L 541.781 23.94 L 410.188 24.902 L 274.166 153.847 L 274.166 231.731 L
-                274.166 231.731 L 274.166 401.433 L 274.166 401.433 C 274.166 401.495 274.166 401.558 274.166 401.62 C
-                274.166 424.529 255.568 443.127 232.659 443.127 C 209.75 443.127 191.152 424.529 191.152 401.62 L 191.152
-                401.62 C 191.152 401.558 191.152 401.495 191.152 401.433 L 191.152 401.433 L 191.152 239.729 L 61.082
-                369.798 Z"
+              d="M 0.1018 0.6163 C 0.0987 0.6334 0.0970 0.6511 0.0970 0.6691 C 0.0970 0.8297 0.2274 0.9601 0.3881
+                0.9601 C 0.5487 0.9601 0.6791 0.8297 0.6791 0.6691 C 0.6791 0.6629 0.6789 0.6568 0.6786 0.6508 L
+                0.6786 0.6508 L 0.6786 0.2580 L 0.9030 0.0399 L 0.6836 0.0415 L 0.4569 0.2564 L 0.4569 0.3862 L
+                0.4569 0.3862 L 0.4569 0.6691 L 0.4569 0.6691 C 0.4569 0.6692 0.4569 0.6693 0.4569 0.6694 C
+                0.4569 0.7075 0.4259 0.7385 0.3878 0.7385 C 0.3496 0.7385 0.3186 0.7075 0.3186 0.6694 L 0.3186
+                0.6694 C 0.3186 0.6693 0.3186 0.6692 0.3186 0.6691 L 0.3186 0.6691 L 0.3186 0.3995 L 0.1018
+                0.6163 Z"
             />
           </clipPath>
         </defs>
       </svg>
-    </SvgContainer>
+    </OuterContainer>
   )
 }
