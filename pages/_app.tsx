@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
     --color-bg-3: #3a3c3a;
     --color-bg-4: #4a4c4a;
     --color-text: #ffffff;
+    --color-text-filter: brightness(100%) saturate(100%);
     --color-text-secondary: #878787;
     --color-text-tertiary: #484848;
     --color-primary: #27a8ff;

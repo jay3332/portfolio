@@ -1,5 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
+
 const Gradient = keyframes`
   from {
     background-position: top left;
@@ -11,23 +12,6 @@ const Gradient = keyframes`
     background-position: top left;
   }
 `;
-
-// For now, I won't use this glowing effect since that drastically hinders with performance.
-// const _ContainerBefore = styled.div`
-//   width: 600px;
-//   height: 600px;
-//   transform: scale(min(20vw, 300px) / 600px);
-//   clip-path: url(#__jay3332_svg_clip);
-//   background: var(--color-text);
-// `;
-//
-// const ContainerBefore = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   filter: blur(128px);
-// `;
-
 const Container = styled.div`
   width: min(20vw, 300px);
   height: min(20vw, 300px);
@@ -55,7 +39,7 @@ const OuterContainer = styled.div`
   transition: all 0.5s ease;
   
   &:hover {
-    filter: brightness(125%) drop-shadow(0 0 128px var(--color-text));
+    filter: brightness(125%) drop-shadow(0 0 12px var(--color-text-secondary));
     transform: rotate(8deg) scale(1.1);
   }
 `;

@@ -94,12 +94,10 @@ const MoveIn = keyframes`
   from {
     opacity: 0;
     transform: translateY(200%);
-    text-shadow: 0 0 0 var(--color-text);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    text-shadow: 0 0 28px var(--color-text);
   }
 `;
 
@@ -108,8 +106,41 @@ const BannerDescription = styled.p`
   font-size: 1.5em;
   margin-top: 12px;
   color: var(--color-text-secondary);
-  text-shadow: 0 0 28px var(--color-text);
   animation: ${MoveIn} 2s ease;
+`;
+
+const FadeMoveDown = keyframes`
+  0% { 
+    transform: translate(0, -20px); 
+    opacity: 0;  
+  }
+  50% { 
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(0, 10px); 
+    opacity: 0; 
+  }
+`;
+
+const ScrollDownArrow = styled.div`
+  position: absolute;
+  background-image: url(/scroll_down_arrow.svg);
+  background-repeat: no-repeat;
+  cursor: pointer;
+  height: 45px;
+  width: 65px;
+  margin-left: -40px;
+  line-height: 60px;
+  left: 50%;
+  bottom: 30px;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  animation: ${FadeMoveDown} 3s ease-in-out infinite;
+  transition: all 0.5s ease;
+  
+  &:hover {
+    filter: drop-shadow(0 0 3px var(--color-text));
+  }
 `;
 
 export default function Home() {
@@ -122,6 +153,7 @@ export default function Home() {
         <Jay3332Svg />
         <BannerText>jay3332</BannerText>
         <BannerDescription>My personal portfolio and website for experiments</BannerDescription>
+        <ScrollDownArrow />
       </Banner>
     </Container>
   )
