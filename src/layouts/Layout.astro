@@ -1,0 +1,57 @@
+---
+import NavBar from '../components/NavBar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  navbar?: 'hidden' | 'transparent' | 'show';
+}
+
+const { title, navbar = 'show' } = Astro.props;
+const META_MESSAGE = "My personal portfolio";
+const EXTERNAL_ICON = "https://github.com/jay3332/jay3332/blob/main/jay3332_circle.png?raw=true";
+const SITE_URL = "https://jay3332.pages.dev"
+---
+
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="jay3332">
+    <meta name="description" content={META_MESSAGE}>
+    <meta name="theme-color" content="#0a0e16">
+
+    <!-- Open Graph / Facebook / Discord -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content={SITE_URL}>
+    <meta property="og:title" content="jay3332">
+    <meta property="og:description" content={META_MESSAGE}>
+    <meta property="og:image" content={EXTERNAL_ICON}>
+
+    <!-- Twitter -->
+    <meta property="twitter:url" content={SITE_URL}>
+    <meta property="twitter:title" content="jay3332">
+    <meta property="twitter:description" content={META_MESSAGE}>
+    <meta property="twitter:image" content={EXTERNAL_ICON}>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body class="m-0 font-sans flex flex-col min-h-[100vh]">
+    {navbar === 'hide'
+      ? undefined
+      : navbar === 'transparent'
+      ? <NavBar transparent={true} />
+      : <NavBar />
+    }
+    <div class="flex-grow">
+      <slot />
+    </div>
+    <Footer />
+  </body>
+</html>
