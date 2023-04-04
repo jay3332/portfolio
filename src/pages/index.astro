@@ -1,40 +1,58 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import NavBar from '../components/NavBar.astro';
 
 const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 ---
 
-<Layout title="jay3332: Home" navbar="transparent">
+<Layout title="jay3332: Home" navbar="hide">
   <main class="m-auto">
-    <div
-      class="h-[max(540px,calc(100vh-4rem))] flex mobile:flex-col-reverse mobile:gap-y-6 pb-24 items-center
-        justify-center w-full relative"
-    >
-      <div>
-        <h1 class="mx-4 font-title font-medium text-6xl mobile:text-5xl">
-          Hey, I'm <b class="font-bold bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent
-          drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">jay3332</b>.
-        </h1>
-        <p class="mx-4 mt-4 text-white/60 text-xl font-light max-w-[600px]">
-          A student who does <span class="font-medium text-white/80">software engineering</span> as a hobby.
-          <br />
-          I primarily program in <span class="font-medium text-[#dea584]">Rust</span>,
-          <span class="font-medium text-[#3572a5]">Python</span>, and
-          <span class="font-medium text-[#3178c6]">TypeScript</span>.
-        </p>
-        <div class="flex flex-row gap-x-4 mt-4 mx-4">
-          <a href="#about-me" class={BANNER_LINK_STYLE}>See More</a>
-          <a href="/projects" class={BANNER_LINK_STYLE}>Projects</a>
-          <a href="https://github.com/jay3332" class={BANNER_LINK_STYLE}>GitHub</a>
+    <div id="banner" class="h-[max(604px,100vh)] flex flex-col relative">
+      <NavBar transparent={true} />
+      <canvas id="mesh-gradient" data-transition-in />
+      <div
+        class="flex mobile:flex-col-reverse mobile:gap-y-6 pb-24 items-center
+        justify-center w-full h-full relative"
+      >
+        <div>
+          <h1 class="mx-4 font-title font-medium text-6xl mobile:text-5xl">
+            Hey, I'm <b class="font-bold bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent
+              drop-shadow-[0_0_8px_rgba(0,0,0,0.5)]">jay3332</b>.
+          </h1>
+          <p class="mx-4 mt-4 text-white/60 text-xl font-light max-w-[600px]">
+            A student who does <span class="font-medium text-white/80">software engineering</span> as a hobby.
+            <br />
+            I primarily program in <span class="font-medium text-[#dea584]">Rust</span>,
+            <span class="font-medium text-[#3572a5]">Python</span>, and
+            <span class="font-medium text-[#3178c6]">TypeScript</span>.
+          </p>
+          <div class="flex flex-row gap-x-4 mt-4 mx-4">
+            <a href="#about-me" class={BANNER_LINK_STYLE}>See More</a>
+            <a href="/projects" class={BANNER_LINK_STYLE}>Projects</a>
+            <a href="https://github.com/jay3332" class={BANNER_LINK_STYLE}>GitHub</a>
+          </div>
         </div>
+        <img src="/jay3332_circle.png" class="w-40 h-40 ml-[5%]" alt="jay3332 Icon" />
+        <a href="#about-me" id="_down" />
       </div>
-      <img src="/jay3332_circle.png" class="w-40 h-40 ml-[5%]" alt="jay3332 Icon" />
-      <a href="#about-me" id="_down" />
     </div>
-    <h2 class="mx-4 font-bold text-3xl" id="about-me">About Me</h2>
-    <p class="mx-4 mt-4 text-white/60 text-xl font-light">sample text</p>
+    <h2 class="mx-4 mt-8 font-bold font-title text-3xl" id="about-me">About Me</h2>
+    <p class="mx-4 mt-4 text-white/60 text-xl font-light">
+      sample text
+    </p>
   </main>
 </Layout>
+
+<script>
+  import { Gradient } from 'whatamesh'
+
+  const gradient = new Gradient()
+  gradient.initGradient('#mesh-gradient')
+
+  const banner = document.getElementById('banner')!
+  banner.addEventListener('mouseover', () => gradient.play())
+  banner.addEventListener('mouseout', () => gradient.pause())
+</script>
 
 <style>
   @keyframes fade-move-down {
@@ -62,7 +80,7 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
     cursor: pointer;
     height: 45px;
     width: 65px;
-    margin-left: -40px;
+    margin-left: -22.5px;
     line-height: 60px;
     left: 50%;
     bottom: 30px;
@@ -73,5 +91,28 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 
   #_down:hover {
     filter: drop-shadow(0 0 3px white);
+  }
+
+  #mesh-gradient {
+    top: 0;
+    left: 0;
+    display: flex;
+    position: absolute;
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    flex-grow: 1;
+    z-index: -1;
+    --gradient-color-1: #0586ff;
+    --gradient-color-2: #9500f2;
+    --gradient-color-3: #ff3d94;
+    --gradient-color-4: #0056c6;
+  }
+
+  #banner {
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
   }
 </style>
