@@ -21,3 +21,7 @@
 html {
   scroll-behavior: smooth;
 }
+
+.link {
+  @apply underline text-link hover:text-link-hover transition duration-200;
+}

@@ -36,10 +36,18 @@ const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_0
         <a href="#about-me" id="_down" />
       </div>
     </div>
-    <h2 class="mx-4 mt-8 font-bold font-title text-3xl" id="about-me">About Me</h2>
-    <p class="mx-4 mt-4 text-white/60 text-xl font-light">
-      sample text
-    </p>
+    <h2 class="text-center mx-4 mt-16 font-bold font-title text-3xl" id="about-me">About Me</h2>
+    <section class="flex flex-col items-center justify-center mx-6 mt-4 text-white/60 text-lg font-light mb-20">
+      <p class="max-w-[700px] text-center">
+        I'm a {AGE}-year old student who lives in the United States. I have lots of experience in
+        <b class="font-medium">software engineering</b> and I've been into computer science since I was little.
+      </p>
+      <p class="mt-2 max-w-[700px] text-center">
+        Nowadays, I mostly work on projects to learn new things and to better the world. Typically, my projects are
+        <b class="font-medium">open-sourced</b> and available on my{' '}
+        <a href="https://github.com/jay3332" class="link">GitHub</a>.
+      </p>
+    </section>
   </main>
 </Layout>
 

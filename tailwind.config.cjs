@@ -6,6 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        link: {
+          DEFAULT: '#41a7ff',
+          hover: '#86c9ff',
+        },
         accent: '#0586ff',
         secondary: '#be3dff',
         gray: {
