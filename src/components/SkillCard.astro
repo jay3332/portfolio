@@ -9,18 +9,24 @@ const { icon, title, color } = Astro.props
 const CLASS = 'rounded-md p-4 bg-gradient-to-br from-transparent to-transparent w-[400px] flex-grow'
 ---
 
-<div class={CLASS} id="skill-card">
-  <h3 class="font-title font-medium text-2xl flex items-center">
-    <img src={icon} alt={title} class="w-9 h-9 invert mr-3" />
+<div class={CLASS} id={title.toLowerCase()}>
+  <h3 class="font-title font-medium text-2xl flex items-center text-white/70 group">
+    <img src={icon} alt={title} class="w-9 h-9 invert mr-3 select-none opacity-70" />
     <span>{title}</span>
+    <a
+      href={'#' + title.toLowerCase()}
+      class="text-white text-opacity-0 hover:!text-opacity-100 group-hover:text-opacity-60 font-sans text-xl ml-4 transition duration-200"
+    >
+      #
+    </a>
   </h3>
-  <p class="text-left mt-2 text-white/80">
+  <p class="text-left mt-2 text-white/70">
     <slot />
   </p>
 </div>
 
 <style define:vars={{ color }}>
-  #skill-card {
-    --tw-gradient-from: rgba(var(--color), 0.3) var(--tw-gradient-from-position) !important;
+  div {
+    --tw-gradient-from: rgba(var(--color), 0.25) var(--tw-gradient-from-position) !important;
   }
 </style>
