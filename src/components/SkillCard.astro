@@ -1,0 +1,26 @@
+---
+interface Props {
+  icon: string
+  title: string
+  color: string
+}
+
+const { icon, title, color } = Astro.props
+const CLASS = 'rounded-md p-4 bg-gradient-to-br from-transparent to-transparent w-[400px] flex-grow'
+---
+
+<div class={CLASS} id="skill-card">
+  <h3 class="font-title font-medium text-2xl flex items-center">
+    <img src={icon} alt={title} class="w-9 h-9 invert mr-3" />
+    <span>{title}</span>
+  </h3>
+  <p class="text-left mt-2 text-white/80">
+    <slot />
+  </p>
+</div>
+
+<style define:vars={{ color }}>
+  #skill-card {
+    --tw-gradient-from: rgba(var(--color), 0.3) var(--tw-gradient-from-position) !important;
+  }
+</style>

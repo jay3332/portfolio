@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NavBar from '../components/NavBar.astro';
+import SkillCard from '../components/SkillCard.astro';
 
 const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_000 / 365)
@@ -36,8 +37,8 @@ const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_0
         <a href="#about-me" id="_down" />
       </div>
     </div>
-    <h2 class="text-center mx-4 mt-16 font-bold font-title text-3xl" id="about-me">About Me</h2>
-    <section class="flex flex-col items-center justify-center mx-6 mt-4 text-white/60 text-lg font-light mb-20">
+    <h2 class="text-center mx-4 mt-8 pt-8 font-bold font-title text-3xl" id="about-me">About Me</h2>
+    <section class="flex flex-col items-center justify-center mx-6 mt-4 text-white/60 text-lg font-light">
       <p class="max-w-[700px] text-center">
         I'm a {AGE}-year old student who lives in the United States. I have lots of experience in
         <b class="font-medium">software engineering</b> and I've been into computer science since I was little.
@@ -48,6 +49,61 @@ const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_0
         <a href="https://github.com/jay3332" class="link">GitHub</a>.
       </p>
     </section>
+    <div class="flex flex-wrap items-center justify-center gap-x-4 mt-4">
+      <a href="#skills" class="hover:text-accent-400 transition duration-200">My Skills</a>
+      <div class="bg-gray-800 w-[3px] rounded-full h-7" />
+      <a href="/projects" class="hover:text-accent-400 transition duration-200">View Projects</a>
+    </div>
+
+    <h2 class="text-center mx-4 mt-24 pt-8 font-bold font-title text-3xl" id="skills">Skills</h2>
+
+    <div class="flex flex-col items-center mt-8 relative">
+      <span class="text-center absolute -top-2 text-gray-700 font-bold text-xs bg-gray-950 px-2 uppercase">
+        Commonly Used
+      </span>
+      <div class="p-4 mx-4 border-2 border-gray-900 rounded-lg">
+        <div class="flex flex-wrap gap-4">
+          <SkillCard icon="/languages/rust.svg" title="Rust" color="222, 165, 132">
+            Rust is a systems programming language that focuses on safety, speed, and concurrency.
+            I began programming in Rust since around 2 years ago and since then it has become my favorite language to
+            use. Today, it is my go-to language for most of my projects.
+          </SkillCard>
+          <SkillCard icon="/languages/python.svg" title="Python" color="53, 115, 165">
+            Python is a general-purpose programming language that I've been using for about 7 years.
+            It was one of the first languages I was introduced to, and it is the language I am the most
+            proficient in. I have written many projects in Python, and I still use it today because of
+            its versatility.
+          </SkillCard>
+          <SkillCard icon="/languages/typescript.svg" title="TypeScript" color="49, 120, 198">
+            TypeScript is a superset of JavaScript that I've been using for about 3 years. It is a
+            statically-typed language that transpiles to JavaScript. I use TypeScript for most of my
+            frontend projects, although I am taking a deeper dive into WebAssembly with Rust.
+          </SkillCard>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center mt-6 mb-8 relative">
+      <span class="text-center absolute -top-2 text-gray-700 font-bold text-xs bg-gray-950 px-2 uppercase">
+        I also work with
+      </span>
+      <div class="p-4 mx-4 border-2 border-gray-900 rounded-lg">
+        <div class="flex flex-wrap gap-4">
+          <SkillCard icon="/languages/kotlin.svg" title="Kotlin" color="169, 123, 255">
+            Kotlin is a JVM-based language that I've gotten used to over the past year. I use it to write
+            code for my <em>FIRST Tech Challenge</em> Robotics team, which (as of April 2023), will be attending
+            the <em>2023 FIRST World Championships</em>.
+          </SkillCard>
+          <SkillCard icon="/languages/java.svg" title="Java" color="176, 114, 25">
+            Disgusting
+          </SkillCard>
+          <SkillCard icon="/languages/c.svg" title="C" color="85, 85, 85">
+            Although I don't use C for many projects, I have had experience using C when creating Rust bindings or
+            when writing low-level code to access or debug hardware.
+          </SkillCard>
+        </div>
+      </div>
+    </div>
   </main>
 </Layout>
 
@@ -71,11 +127,7 @@ const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_0
     35% {
       opacity: 1;
     }
-    70% {
-      transform: translate(0, 10px);
-      opacity: 0;
-    }
-    100% {
+    70%, 100% {
       transform: translate(0, 10px);
       opacity: 0;
     }
@@ -110,7 +162,7 @@ const AGE = Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_0
     justify-content: stretch;
     width: 100%;
     height: 100%;
-    opacity: 0.1;
+    opacity: 0.12;
     flex-grow: 1;
     z-index: -1;
     --gradient-color-1: #0586ff;
