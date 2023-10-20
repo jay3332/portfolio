@@ -15,7 +15,7 @@ const SITE_URL = "https://jay3332.pages.dev"
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-950 text-white">
+<html lang="en" class="bg-black text-white">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -49,9 +49,7 @@ const SITE_URL = "https://jay3332.pages.dev"
       ? <NavBar transparent={true} />
       : <NavBar />
     }
-    <div class="flex-grow">
-      <slot />
-    </div>
+    <slot />
     <Footer />
   </body>
 </html>
