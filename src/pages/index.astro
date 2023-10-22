@@ -6,16 +6,16 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 ---
 
 <Layout title="jay3332: Home" navbar="hide">
-  <div id="banner" class="h-[100vh] flex flex-col overflow-hidden box-border relative">
+  <div id="banner" class="h-[100vh] overflow-hidden box-border relative">
     <NavBar transparent={true} />
-    <div class="flex flex-col pb-24 items-center justify-center h-full relative">
+    <div id="banner-drag-area" class="flex flex-col pb-24 items-center justify-center h-full relative">
       <h1 class="mx-4 font-title font-medium text-6xl select-none">jay3332</h1>
-      <div class="flex flex-row gap-x-4 mt-4 mx-4 justify-center select-none">
+      <div id="banner-links" class="flex flex-row gap-x-4 mt-4 mx-4 justify-center select-none">
         <a href="/projects" class={BANNER_LINK_STYLE}>Projects</a>
         <a href="https://github.com/jay3332" class={BANNER_LINK_STYLE}>GitHub</a>
       </div>
     </div>
-    <canvas id="3d" class="absolute overflow-hidden box-border -z-[1] pointer-events-auto" />
+    <canvas id="3d" class="absolute overflow-hidden box-border -z-10 pointer-events-auto" />
   </div>
 </Layout>
 
@@ -32,13 +32,8 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, banner.clientWidth / banner.clientHeight, 0.1, 200);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 50);
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 100);
-  directionalLight.position.set(0.5, 0.5, 1);
-
-  scene.add(directionalLight, ambientLight);
-
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("3d") });
+  const canvas = document.getElementById("3d")!
+  const renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setSize(banner.clientWidth, banner.clientHeight);
   document.body.appendChild(renderer.domElement);
 
@@ -48,12 +43,8 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
     data => {
       const [path] = data.paths
 
-      const material = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0,
-        metalness: 0.999,
-        side: THREE.FrontSide,
-      })
+      const matcapTexture = new THREE.TextureLoader().load("/matcap.png");
+      const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
 
       const geometry = new THREE.ExtrudeGeometry(SVGLoader.createShapes(path), {
         depth: 50,
@@ -68,8 +59,16 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
     () => {},
   )
 
+  const whitelist = document.getElementById("banner-links")!
+  for (const event of ["pointermove", "pointerup", "pointerdown", "pointercancel"]) {
+    whitelist.addEventListener(event as keyof HTMLElementEventMap, event => event.stopPropagation())
+    banner.addEventListener(event as keyof HTMLElementEventMap, (event: PointerEvent) => {
+      canvas.dispatchEvent(new PointerEvent(event.type, event))
+    })
+  }
+
   camera.position.z = 125;
-  const controls = new OrbitControls(camera, document.getElementById("banner"));
+  const controls = new OrbitControls(camera, document.getElementById("banner-drag-area")!);
   controls.enableZoom = false
   controls.enablePan = false
 
@@ -97,3 +96,9 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 
   animate();
 </script>
+
+<style>
+  #banner-drag-area {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  }
+</style>
