@@ -15,7 +15,7 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
         <a href="https://github.com/jay3332" class={BANNER_LINK_STYLE}>GitHub</a>
       </div>
     </div>
-    <canvas id="3d" class="absolute overflow-hidden box-border -z-10 pointer-events-auto" />
+    <canvas id="3d" class="absolute overflow-hidden box-border -z-10 pointer-events-auto opacity-60" />
   </div>
 </Layout>
 
@@ -96,9 +96,3 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 
   animate();
 </script>
-
-<style>
-  #banner-drag-area {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-  }
-</style>
