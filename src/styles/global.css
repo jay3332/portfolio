@@ -22,6 +22,15 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .link {
   @apply underline text-link hover:text-link-hover transition duration-200;
 }

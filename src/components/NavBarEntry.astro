@@ -4,10 +4,13 @@ export interface Props {
 }
 
 const { href } = Astro.props;
+const { pathname } = Astro.url;
+const opacity = pathname === href ? "text-opacity-100" : "text-opacity-70";
+const className = `text-white ${opacity} hover:text-opacity-100 underline-offset-4 hover:underline transition-all`
 ---
 
-<li class="text-white text-opacity-70 hover:text-opacity-100 transition-all">
-  <a href={href}>
+<li class={className}>
+  <a href={href} class="md:text-base text-lg">
     <slot />
   </a>
 </li>
