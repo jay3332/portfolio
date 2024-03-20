@@ -23,6 +23,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@types/three": "^0.157.2",
-    "daisyui": "^3.9.3"
+    "daisyui": "^3.9.3",
+    "vite": "^5.1.6"
   }
 }
