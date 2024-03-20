@@ -1,18 +1,12 @@
 ---
-const SOCIAL_ICON_CLASSES = 'invert opacity-70 hover:opacity-100 transition-all duration-200 w-8';
+import Socials from './Socials.astro';
+
 const YEAR = new Date().getFullYear();
 ---
 
 <footer class="flex flex-col items-center bg-gray-900/40 py-6 box-border">
   <div class="pb-4 flex flex-col items-center md:flex-row">
-    <div class="flex items-center gap-4">
-      <a href="https://github.com/jay3332">
-        <img src="/icons/github.svg" alt="GitHub" class={SOCIAL_ICON_CLASSES} width="32px">
-      </a>
-      <a href="https://discord.gg/FqtZ6akWpd">
-        <img src="/icons/discord.svg" alt="Discord" class={SOCIAL_ICON_CLASSES} width="32px">
-      </a>
-    </div>
+    <Socials />
   </div>
   <p class="text-white text-opacity-50">
     Copyright &copy; {YEAR} jay3332

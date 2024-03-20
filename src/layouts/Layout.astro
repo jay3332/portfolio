@@ -6,9 +6,10 @@ import '../styles/global.css';
 export interface Props {
   title: string;
   navbar?: 'hidden' | 'transparent' | 'show';
+  showFooter?: boolean;
 }
 
-const { title, navbar = 'show' } = Astro.props;
+const { title, navbar = 'show', showFooter = true } = Astro.props;
 const META_MESSAGE = "My personal portfolio";
 const EXTERNAL_ICON = "https://github.com/jay3332/jay3332/blob/main/jay3332_circle.png?raw=true";
 const SITE_URL = "https://jay3332.pages.dev"
@@ -50,6 +51,6 @@ const SITE_URL = "https://jay3332.pages.dev"
       : <NavBar />
     }
     <slot />
-    <Footer />
+    {showFooter && <Footer />}
   </body>
 </html>
