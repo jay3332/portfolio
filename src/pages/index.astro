@@ -10,11 +10,14 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
   <div id="banner" class="h-[calc(100vh-36px)] overflow-hidden box-border relative">
     <NavBar transparent={true} />
     <div id="banner-drag-area" class="flex flex-col pb-24 items-center justify-center h-full relative">
-      <h1 class="mx-4 font-title font-medium text-6xl select-none">jay3332</h1>
+      <h1 class="mx-4 font-title font-black text-8xl mobile:text-6xl select-none bg-gradient-to-b
+        from-white/60 to-white/100 bg-clip-text text-transparent"
+      >
+        jay3332
+      </h1>
       <div id="banner-links" class="flex flex-row gap-x-4 mt-4 mx-4 justify-center select-none">
         <a href="/about" class={BANNER_LINK_STYLE}>About</a>
         <a href="/projects" class={BANNER_LINK_STYLE}>Projects</a>
-        <a href="https://github.com/jay3332" class={BANNER_LINK_STYLE}>GitHub</a>
       </div>
     </div>
     <canvas id="3d" class="absolute overflow-hidden box-border -z-10 pointer-events-auto opacity-60" />

@@ -3,11 +3,19 @@ layout: ../layouts/Article.astro
 title: "jay3332: About"
 ---
 
-# <span class="bg-gradient-to-tl from-white to-cyan-200 text-transparent bg-clip-text">jay3332</span>
+<div class="flex gap-6">
+  <div>
 
-Hey! I'm a {Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_000 / 365)}-year old student who has a
-passion for software development and computer science. I created this portfolio as a way to showcase and elaborate on my
-projects and accomplishments.
+    # <span class="font-title bg-gradient-to-tl from-white to-cyan-200 text-transparent bg-clip-text">jay3332</span>
+
+    Hey! I'm a {Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_000 / 365)}-year old student who has a
+    passion for software development and computer science. I created this portfolio as a way to showcase and elaborate on my
+    projects and accomplishments.
+
+  </div>
+
+  <img src="/jay3332_circle.png" alt="" class="rounded-full w-32 h-32 mobile:hidden" />
+</div>
 
 I'm currently working on a few projects, including [the Terbium Programming Language](/projects/terbium),
 [the Adapt chat platform](/projects/adapt), and [RIL, an image processing library for Rust](/projects/ril).
@@ -33,5 +41,6 @@ management. I also use **RabbitMQ** as a way to pass messages and events between
 #### Web Development
 
 When developing websites, I use <span class="font-medium text-[#3178c6]">TypeScript</span> with frameworks such as
-**Astro** (like this website), **Solid.js**, and **React**. Sometimes, I may also integrate my Rust projects into my
-websites using **WebAssembly**. For styling, I primarily use **TailwindCSS** and **Sass**.
+<span class="font-medium text-[#ff5a03]">Astro</span> (like this website), <span class="font-medium text-[#446b9e]">Solid.js</span>, 
+and <span class="font-medium text-[#61dafb]">React</span>. Sometimes, I may also integrate my Rust projects into my
+websites using <span class="font-medium text-[#624de8]">WebAssembly</span>. For styling, I primarily use **TailwindCSS** and **Sass**.

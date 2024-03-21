@@ -4,6 +4,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "typeRoots": ["./types", "./node_modules/@types"],
+    "strictNullChecks": true
   },
   "include": ["src/**/*"]
 }

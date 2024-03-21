@@ -9,16 +9,19 @@ export interface Props {
 const { transparent = false } = Astro.props;
 ---
 
-<header class={`md:flex justify-center p-2 gap-5 ${transparent ? "" : "bg-gray-900/40"}`}>
+<header class={`md:flex justify-center p-2 gap-5 ${transparent ? "" : "bg-gray-900/60"}`}>
   <Astronav>
     <div class="flex w-full items-center justify-between">
-      <a href="/" class="px-3">
+      <a href="/" class="px-3 flex items-center gap-x-3 group">
         <img
           src="/icons/jay3332.svg"
-          class="h-[32px] invert opacity-30 hover:opacity-100 transition-opacity"
+          class="h-[32px] invert opacity-30 group-hover:opacity-100 transition-opacity"
           height="32px"
           alt="jay3332"
         />
+        {!transparent && <span class="font-title text-xl font-bold transition-opacity opacity-60 group-hover:opacity-100">
+          jay3332
+        </span>}
       </a>
       <div class="block md:hidden p-3">
         <MenuIcon class="w-4 h-4 text-white text-opacity-70 hover:text-opacity-100 transition-all" />
@@ -35,3 +38,12 @@ const { transparent = false } = Astro.props;
     </MenuItems>
   </Astronav>
 </header>
+
+<style>
+  @media (max-width: 768px) {
+    body > header > div > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+</style>

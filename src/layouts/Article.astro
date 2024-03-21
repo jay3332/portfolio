@@ -1,10 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro'
+
+const {frontmatter} = Astro.props;
 ---
 
-<Layout>
+<Layout title={frontmatter.title}>
   <main class="flex flex-col flex-grow items-center">
-    <div class="self-center my-8 w-[76ch] mobile:w-[90vw] prose lg:prose-xl">
+    <div class="self-center my-[5vw] w-[76ch] mobile:w-[90vw] prose lg:prose-xl">
       <slot />
     </div>
   </main>
