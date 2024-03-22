@@ -17,5 +17,5 @@ export default defineConfig({
     }
   }), sitemap(), mdx()],
   output: "server",
-  adapter: cloudflare()
+  adapter: cloudflare({ mode: 'directory' })
 });
