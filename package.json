@@ -26,5 +26,16 @@
     "@types/three": "^0.157.2",
     "daisyui": "^3.9.3",
     "vite": "^5.1.6"
+  },
+  "overrides": {
+    "@babel/helper-module-imports": "~7.24.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/helper-module-imports": "~7.24.3"
+    }
+  },
+  "resolutions": {
+    "@babel/helper-module-imports": "~7.24.3"
   }
 }
