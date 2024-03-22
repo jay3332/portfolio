@@ -1,0 +1,39 @@
+---
+import { z } from 'astro:content'
+import { projectsSchema } from '../content/config'
+
+export interface Props {
+  data: z.infer<typeof projectsSchema>,
+}
+const { data } = Astro.props
+const DIAG_ARROW_CLASS = 
+  "invert w-4 h-4 opacity-30 -rotate-45 group-hover/btn:opacity-100 translate-x-0 translate-y-0 "
+  + "group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all"
+---
+
+<div class="flex mt-2 gap-x-4">
+  {(data.repo ?? data.org) && (
+    <object>
+      <a
+        class="flex items-center text-sm font-semibold gap-x-1 text-white/80 group/btn"
+        href={`https://github.com/${data.repo ?? data.org}`}
+      >
+        <img src="/icons/github.svg" alt="" class="invert w-4 h-4 opacity-60 group-hover/btn:opacity-100 mr-0.5">
+        <span class="text-white/70 group-hover/btn:text-white/100 transition">GitHub</span>
+        <img src="/icons/arrow-right.svg" alt="" class={DIAG_ARROW_CLASS}>
+      </a>
+    </object>
+  )}
+  {data.url && (
+    <object>
+      <a
+        class="flex items-center text-sm font-semibold gap-x-1 text-white/80 group/btn"
+        href={data.url}
+      >
+        <img src="/icons/link.svg" alt="" class="invert w-4 h-4 opacity-60 group-hover/btn:opacity-100 mr-0.5">
+        <span class="text-white/70 group-hover/btn:text-white/100 transition" set:html={data.label ?? "Visit Link"} />
+        <img src="/icons/arrow-right.svg" alt="" class={DIAG_ARROW_CLASS}>
+      </a>
+    </object>
+  )}
+</div>

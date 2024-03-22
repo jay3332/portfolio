@@ -1,11 +1,12 @@
 ---
 import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 
 export interface Props {
   title: string;
-  navbar?: 'hidden' | 'transparent' | 'show';
+  navbar?: 'hide' | 'transparent' | 'show';
   showFooter?: boolean;
 }
 
@@ -39,6 +40,8 @@ const SITE_URL = "https://jay3332.pages.dev"
     <meta property="twitter:title" content="jay3332">
     <meta property="twitter:description" content={META_MESSAGE}>
     <meta property="twitter:image" content={EXTERNAL_ICON}>
+
+    <ViewTransitions />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <title>{title}</title>

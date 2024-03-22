@@ -36,14 +36,10 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
   if (!WebGL.isWebGLAvailable())
     throw new Error('WebGL is not available. Not rendering 3D banner');
 
-  const banner = document.getElementById("banner");
+  const banner = document.getElementById("banner")!;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, banner.clientWidth / banner.clientHeight, 0.1, 200);
-
   const canvas = document.getElementById("3d")!
-  const renderer = new THREE.WebGLRenderer({ canvas });
-  renderer.setSize(banner.clientWidth, banner.clientHeight);
-  document.body.appendChild(renderer.domElement);
 
   let svgMesh: THREE.Mesh | null = null
   new SVGLoader(undefined).load(
@@ -67,18 +63,30 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
     () => {},
   )
 
-  const whitelist = document.getElementById("banner-links")!
-  for (const event of ["pointermove", "pointerup", "pointerdown", "pointercancel"]) {
-    whitelist.addEventListener(event as keyof HTMLElementEventMap, event => event.stopPropagation())
-    banner.addEventListener(event as keyof HTMLElementEventMap, (event: PointerEvent) => {
-      canvas.dispatchEvent(new PointerEvent(event.type, event))
-    })
+  function refreshElements() {
+    const banner = document.getElementById("banner")!
+    renderer = new THREE.WebGLRenderer({ canvas });
+    renderer.setSize(banner.clientWidth, banner.clientHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const whitelist = document.getElementById("banner-links")!
+    for (const event of ["pointermove", "pointerup", "pointerdown", "pointercancel"]) {
+      whitelist.addEventListener(event as keyof HTMLElementEventMap, event => event.stopPropagation())
+      banner!.addEventListener(event as keyof HTMLElementEventMap, ((event: PointerEvent) => {
+        canvas.dispatchEvent(new PointerEvent(event.type, event))
+      }) as any)
+    }
+
+    controls = new OrbitControls(camera, document.getElementById("banner-drag-area")!);
+    controls.enableZoom = false
+    controls.enablePan = false
   }
 
+  let renderer: THREE.WebGLRenderer
+  let controls: OrbitControls
+  refreshElements()
+
   camera.position.z = 125;
-  const controls = new OrbitControls(camera, document.getElementById("banner-drag-area")!);
-  controls.enableZoom = false
-  controls.enablePan = false
 
   // Disable rotation on reduced motion
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -94,13 +102,16 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 
   window.addEventListener('resize', onWindowResize, false);
 
-  function onWindowResize(){
-    const banner = document.getElementById("banner");
+  function onWindowResize() {
+    const banner = document.getElementById("banner")!;
     camera.aspect = banner.clientWidth / banner.clientHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(banner.clientWidth, banner.clientHeight);
   }
 
-  animate();
+  animate()
+  document.addEventListener('astro:after-swap', () => {
+    if (window.location.pathname === '/') refreshElements()
+  })
 </script>

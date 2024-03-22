@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import ProjectLinks from '../../components/ProjectLinks.astro';
 import { getCollection, getEntry } from 'astro:content';
 
 const allProjects = await getCollection('projects')
@@ -14,49 +15,47 @@ const Content = await entry?.render().then(c => c.Content)
 
 <Layout title="jay3332: Projects">
   <div class="flex">
-    <div>
-      <h1 class="px-4">My Work</h1>
-      <div class:list={["flex gap-3 p-4"]}>
-        {allProjects.map(project => (
-          <a 
-            href={`/projects/${project.slug}`}
-            class:list={[
-              "flex gap-x-2 rounded-xl p-4 group transition w-[48ch]",
-              slug === project.slug ? "bg-gray-900" : "bg-transparent hover:",  
-              entry ? "w-[48ch]" : "hover:bg-gradient-to-br hover:from-transparent hover:to-white/10 mobile:w-full"
-            ]}
-          >
-            {project.data.thumbnail && <img src={project.data.thumbnail} alt="" class="w-20 h-20">}
-            <div class="flex flex-col my-1">
-              <div class="flex items-center justify-between">
-                <h2 class="transition underline-offset-2">
-                  <span class="flex items-center">
-                    {project.data.name}
-                    <img 
-                      src="/icons/arrow-right.svg" 
-                      alt="" 
-                      class="invert w-4 h-4 opacity-30 group-hover:opacity-100 ml-1.5 group-hover:ml-2 transition-all"
-                    >  
-                  </span>
-                </h2>
-                <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
-              </div>
-              <p class="font-light text-sm text-white/80">{project.data.description}</p>  
-              <div class="flex flex-wrap gap-1 mt-2">
-                {project.data.skills.map(s => (
-                  <span class="px-2 py-0.5 text-xs rounded-full bg-accent/40 text-accent-300 uppercase font-bold">{s}</span>
-                ))}
-              </div>
-              <div class="flex mt-2">
-                {(project.data.repo ?? project.data.org) && (
-                  <p>link</p>
-                )}
-              </div>
+    <div class:list={["flex mobile:flex-col gap-3 p-4", entry ? "tablet:hidden flex-col" : "w-full"]}>
+      {allProjects.map(project => (
+        <a 
+          href={`/projects/${project.slug}`}
+          class:list={[
+            "flex gap-x-2 rounded-xl p-4 group transition-all box-border",
+            slug === project.slug 
+              ? "bg-gradient-to-br from-transparent to-gray-900" 
+              : "bg-transparent hover:bg-gradient-to-br hover:from-transparent hover:to-white/10",  
+            entry ? "w-[48ch]" : "w-[48ch] mobile:w-full"
+          ]}
+        >
+          {project.data.thumbnail && <img src={project.data.thumbnail} alt="" class="rounded-xl w-20 h-20 m-2">}
+          <div class="flex flex-col my-1">
+            <div class="flex flex-wrap items-center justify-between">
+              <h2 class="transition underline-offset-2">
+                <span class="flex items-center">
+                  {project.data.name}
+                  <img 
+                    src="/icons/arrow-right.svg" 
+                    alt="" 
+                    class="invert w-4 h-4 opacity-30 group-hover:opacity-100 ml-1.5 group-hover:ml-2 transition-all"
+                  >  
+                </span>
+              </h2>
+              <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
             </div>
-          </a>
-        ))}
-      </div>
+            <p class="font-light text-sm text-white/80 mt-0.5">{project.data.description}</p>  
+            <ProjectLinks data={project.data} />
+            <div class="flex flex-wrap gap-1 mt-3">
+              {project.data.skills.map(s => (
+                <span class="px-2 py-0.5 text-xs rounded-full bg-accent/40 text-accent-300 uppercase font-bold">{s}</span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
     </div>
-    {Content && <Content />}
+    {Content && entry && <div class="prose px-2 py-4">
+      <h1 class="mb-0">{entry.data.name}</h1>
+      <Content />
+    </div>}
   </div>
 </Layout>

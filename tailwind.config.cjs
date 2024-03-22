@@ -64,6 +64,7 @@ const config = {
       screens: {
         'mobile-xs': { max: '369px' },
         'mobile': { max: '767px' },
+        'tablet': { max: '1023px' },
       },
     },
     fontFamily: {

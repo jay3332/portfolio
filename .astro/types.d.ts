@@ -143,6 +143,20 @@ declare module 'astro:content' {
   collection: "projects";
   data: InferEntrySchema<"projects">
 } & { render(): Render[".mdx"] };
+"ril.mdx": {
+	id: "ril.mdx";
+  slug: "ril";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"terbium.mdx": {
+	id: "terbium.mdx";
+  slug: "terbium";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
 };
 
 	};

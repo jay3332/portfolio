@@ -33,7 +33,7 @@ const { transparent = false } = Astro.props;
       <ul class="flex flex-col md:flex-row md:gap-5 md:p-0 p-2">
         <NavBarEntry href="/">Home</NavBarEntry>
         <NavBarEntry href="/about">About</NavBarEntry>
-        <NavBarEntry href="/projects">Projects</NavBarEntry>
+        <NavBarEntry href="/projects" highlight={p => p.startsWith('/projects')}>Projects</NavBarEntry>
       </ul>
     </MenuItems>
   </Astronav>
