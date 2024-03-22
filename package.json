@@ -12,7 +12,7 @@
     "vite": "vite"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^9.1.0",
+    "@astrojs/cloudflare": "~9.0.0",
     "@astrojs/mdx": "^2.2",
     "@astrojs/sitemap": "^3.1",
     "@astrojs/tailwind": "^5.1",
