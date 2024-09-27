@@ -1,6 +1,7 @@
 ---
 import { Astronav, MenuItems, MenuIcon, Dropdown, DropdownItems } from "astro-navbar";
 import NavBarEntry from "./NavBarEntry.astro";
+import { Icon } from "astro-icon/components"
 
 export interface Props {
   transparent?: boolean;
@@ -10,14 +11,12 @@ const { transparent = false } = Astro.props;
 ---
 
 <header class={`md:flex justify-center p-2 gap-5 ${transparent ? "" : "bg-gray-900/60"}`}>
-  <Astronav>
+  <Astronav closeOnClick>
     <div class="flex w-full items-center justify-between">
       <a href="/" class="px-3 flex items-center gap-x-3 group">
-        <img
-          src="/icons/jay3332.svg"
-          class="h-[32px] invert opacity-30 group-hover:opacity-100 transition-opacity"
-          height="32px"
-          alt="jay3332"
+        <Icon
+          name="jay3332"
+          class="text-3xl opacity-30 group-hover:opacity-100 transition-opacity"
         />
         {!transparent && <span class="font-title text-xl font-bold transition-opacity opacity-60 group-hover:opacity-100">
           jay3332
@@ -30,10 +29,11 @@ const { transparent = false } = Astro.props;
     <MenuItems
       class="hidden md:flex md:p-3 md:m-0 mr-3 md:static bg-gray-900 md:bg-transparent rounded-xl absolute right-0 z-50"
     >
-      <ul class="flex flex-col md:flex-row md:gap-5 md:p-0 p-2">
+      <ul class="_navlist flex flex-col md:flex-row md:gap-5 md:p-0 p-2">
         <NavBarEntry href="/">Home</NavBarEntry>
         <NavBarEntry href="/about">About</NavBarEntry>
         <NavBarEntry href="/projects" highlight={p => p.startsWith('/projects')}>Projects</NavBarEntry>
+        <NavBarEntry href="/experience">Experience</NavBarEntry>
       </ul>
     </MenuItems>
   </Astronav>
@@ -47,3 +47,11 @@ const { transparent = false } = Astro.props;
     }
   }
 </style>
+
+<script>
+
+  document.addEventListener("click", (e) => {
+
+
+  })
+</script>

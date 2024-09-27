@@ -69,7 +69,7 @@ const config = {
     },
     fontFamily: {
       title: ['"Mona Sans"', "'Inter var'", ...defaultTheme.fontFamily.sans],
-      sans: ["'Inter var'", ...defaultTheme.fontFamily.sans],
+      sans: ["Figtree", "'Inter var'", ...defaultTheme.fontFamily.sans],
       mono: [
         'Menlo', 'Monaco', 'Lucida Console', 'Liberation Mono',
         'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', 'monospace',

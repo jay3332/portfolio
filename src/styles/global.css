@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,10 +27,30 @@ html {
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  background-image:
+      radial-gradient(at 75% 25%, rgb(5 134 255 / 0.13) 0px, transparent 60%),
+      radial-gradient(at 10% 90%, rgb(168 45 247 / 0.13) 0px, transparent 60%);
 }
 
 body::-webkit-scrollbar {
   display: none;
+}
+
+::-webkit-scrollbar {
+  width: 0.2rem;
+  height: 0.2rem;
+}
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb {
+  background-color: rgb(130 130 160 / 0.2);
+  border-radius: 0.1rem;
+  &:hover { background-color: rgb(130 130 160 / 0.4) }
+}
+::-webkit-scrollbar-corner { background: transparent }
+
+* {
+  scrollbar-color: rgb(130 130 160 / 0.2) transparent;
+  scrollbar-width: thin;
 }
 
 .link {

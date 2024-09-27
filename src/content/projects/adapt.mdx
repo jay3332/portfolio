@@ -1,8 +1,7 @@
 ---
 name: Adapt
 description: 
-  A versatile, open-source, privacy-focused chat and social platform 
-  tailoring towards flexibility and customizability.
+  A versatile social platform tailoring towards privacy, flexibility, performance, and customizability.
 url: https://adapt.chat
 label: Visit Adapt
 timeline: Dec 2022 - Present
@@ -23,4 +22,21 @@ active: true
 
 ## What is Adapt?
 
-Adapt is a chat platform
+A versatile, open-source, privacy-focused chat and social messaging platform tailoring towards flexibility and
+customizability.
+
+## Infrastructure
+
+### Rust Backend
+- REST services (public API, content delivery network, and media proxy) written using axum
+- CDN tags images with metadata processed using RIL (see "Projects/RIL")
+- WebSocket written using tokio-tungstenite and communicates using RabbitMQ message broker
+- Voice server based on WebRTC protocol
+
+### Data Storage
+- Durable models such user accounts stored using PostgreSQL, cached using Redis
+- Ephemeral models such as message acknowledgements and user mentions are stored on Redis
+
+### Front-end
+- Web-based client served at https://app.adapt.chat, written using Solid.js, Tailwind CSS, and Tauri
+- Landing and onboarding webpage served at https://adapt.chat, written using Astro and Tailwind CSS

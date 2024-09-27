@@ -1,61 +1,57 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import ProjectLinks from '../../components/ProjectLinks.astro';
 import { getCollection, getEntry } from 'astro:content';
+import ProjectCard from "../../components/ProjectCard.astro";
+import ProjectLinks from "../../components/ProjectLinks.astro";
+import { Icon } from 'astro-icon/components';
 
 const allProjects = await getCollection('projects')
 const { project: slug } = Astro.params
 
 const entry = slug ? await getEntry('projects', slug) : null
-if (!entry && slug != null) 
+if (!entry)
   return Astro.redirect('/404')
 
 const Content = await entry?.render().then(c => c.Content)
 ---
 
 <Layout title="jay3332: Projects">
-  <div class="flex">
-    <div class:list={["flex mobile:flex-col gap-3 p-4", entry ? "tablet:hidden flex-col" : "w-full"]}>
-      {allProjects.map(project => (
-        <a 
-          href={`/projects/${project.slug}`}
-          class:list={[
-            "flex gap-x-2 rounded-xl p-4 group transition-all box-border",
-            slug === project.slug 
-              ? "bg-gradient-to-br from-transparent to-gray-900" 
-              : "bg-transparent hover:bg-gradient-to-br hover:from-transparent hover:to-white/10",  
-            entry ? "w-[48ch]" : "w-[48ch] mobile:w-full"
-          ]}
-        >
-          {project.data.thumbnail && <img src={project.data.thumbnail} alt="" class="rounded-xl w-20 h-20 m-2">}
-          <div class="flex flex-col my-1">
-            <div class="flex flex-wrap items-center justify-between">
-              <h2 class="transition underline-offset-2">
-                <span class="flex items-center">
-                  {project.data.name}
-                  <img 
-                    src="/icons/arrow-right.svg" 
-                    alt="" 
-                    class="invert w-4 h-4 opacity-30 group-hover:opacity-100 ml-1.5 group-hover:ml-2 transition-all"
-                  >  
-                </span>
-              </h2>
-              <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
-            </div>
-            <p class="font-light text-sm text-white/80 mt-0.5">{project.data.description}</p>  
-            <ProjectLinks data={project.data} />
-            <div class="flex flex-wrap gap-1 mt-3">
-              {project.data.skills.map(s => (
-                <span class="px-2 py-0.5 text-xs rounded-full bg-accent/40 text-accent-300 uppercase font-bold">{s}</span>
-              ))}
-            </div>
-          </div>
-        </a>
-      ))}
+  <div class="flex flex-grow h-[calc(100lvh-4rem-8rem)]">
+    <div class="tablet:hidden overflow-x-hidden overflow-y-auto p-2 h-full flex-grow flex flex-col items-end">
+      <div class="flex flex-col gap-y-3">
+        {allProjects.map(project => (
+          <ProjectCard project={project} slug={slug} entry={entry} />
+        ))}
+      </div>
     </div>
-    {Content && entry && <div class="prose px-2 py-4">
-      <h1 class="mb-0">{entry.data.name}</h1>
-      <Content />
-    </div>}
+    <div class="overflow-y-auto h-full py-4 w-[65ch] tablet:w-auto flex-grow tablet:flex tablet:justify-center">
+      {Content && <div class="px-4 max-w-[65ch] tablet:max-w-full">
+        <h1 class="pt-4 mb-4 text-white/80 text-4xl font-bold" id={entry.slug}>{entry.data.name}</h1>
+        <ProjectLinks data={entry.data} />
+        <div class="prose mt-10 [&>*>img]:!rounded-2xl">
+          <Content />
+        </div>
+        <div class="flex pt-8 tablet:pb-8 pb-4 w-full justify-center">
+          <a class="btn btn-ghost group" href="/projects/all">
+            <Icon name="arrow-right" class="rotate-180 group-hover:-translate-x-1 transition-transform" />
+            View More Projects
+          </a>
+          <div class="divider divider-horizontal" />
+          <a class="btn btn-ghost group" href=`#${entry.slug}`>
+            <Icon name="arrow-right" class="-rotate-90 group-hover:-translate-y-1 transition-transform" />
+            Back to Top
+          </a>
+        </div>
+      </div>}
+    </div>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const currentCard = document.getElementById(`project__${slug}`)
+    if (currentCard) {
+      currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  })
+</script>

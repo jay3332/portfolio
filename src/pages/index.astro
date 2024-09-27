@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import NavBar from '../components/NavBar.astro';
 import Socials from '../components/Socials.astro';
 
-const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
+const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:-translate-y-1 transition-transform"
 ---
 
 <Layout title="jay3332: Home" navbar="hide" showFooter={false}>
@@ -27,6 +27,14 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
   </div>
 </Layout>
 
+<style>
+  body {
+    background-image:
+      radial-gradient(at 65% 35%, rgb(5 134 255 / 0.14) 0px, transparent 60%),
+      radial-gradient(at 35% 65%, rgb(168 45 247 / 0.14) 0px, transparent 60%) !important;
+  }
+</style>
+
 <script>
   import * as THREE from 'three';
   import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
@@ -43,7 +51,7 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline"
 
   let svgMesh: THREE.Mesh | null = null
   new SVGLoader(undefined).load(
-    '/icons/jay3332.svg',
+    '/jay3332.svg',
     data => {
       const [path] = data.paths
 

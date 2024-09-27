@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import {getCollection} from "astro:content";
+
+const allProjects = await getCollection('projects')
+---
+
+<Layout title="All Projects">
+  <!--<h1 class="font-title font-bold text-2xl text-center m-4">Project Catalog</h1>-->
+  <div class="flex flex-grow justify-center">
+    <div class="max-w-[172ch]">
+      <div class="grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 p-4 grid">
+        {allProjects.map(project => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>

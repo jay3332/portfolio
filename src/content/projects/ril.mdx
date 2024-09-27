@@ -1,8 +1,7 @@
 ---
 name: ril
 description: |
-  ril stands for Rust Imaging Library and is named after PIL (Python Imaging Library).
-  This high-level Rust crate brings a flexible and accessible image processing experience to your Rust programs.
+  A high-level and speedy general-purpose image processing library for Rust, inspired by the Python Imaging Library (PIL).
 timeline: Jul 2022 - Present
 url: https://crates.io/crates/ril
 label: crates.io
@@ -13,4 +12,179 @@ skills:
 repo: jay3332/ril
 active: true
 ---
+
+## Introduction
+
+Around 5 billion photos are taken every day. Of these, a significant portion is edited, processed, and distributed online.
+In addition to photos, there is also digital art, graphics, and animations—all of which are stored and shared as images.
+
+With so many images, it's no wonder that image processing is a critical part of modern software development. Editing
+and processing images is a common task in many applications, from simple photo filters to complex image transformations.
+
+I was inspired to create RIL after working on an image captioning pipeline that simply renders text on top of images.
+This shouldn't matter if the image is static or animated, but I found that most image processing libraries neglect
+animated images, with me having to special-case the cumbersome handling of them in my code.
+
+## What is this project?
+
+RIL is an acronym for **<u>R</u>ust <u>I</u>maging <u>L</u>ibrary**, a name derived from the Python-equivalent PIL (Python Imaging Library).
+Inspired by the intuitive interface of PIL, RIL aims to provide a high-level, flexible, and accessible image processing
+experience to Rust developers.
+
+RIL is a general-purpose image processing library, supporting all sorts of image formats, operations, and functionality.
+I designed RIL for not just static, single-frame image processing—which is what most image processing libraries are
+already good at—but for animated images such as GIFs and APNGs as well.
+
+![RIL Demo](/images/ril_demo.gif)
+
+## Features
+
+- Support for encoding from/decoding to a wide range of image formats
+- Variety of image processing and manipulation operations, including drawing, filtering, and transformations
+- Robust support for animated images such as GIFs, treating them equally to static images
+- Robust and performant support for fonts and text rendering
+
+## Performance
+
+RIL is written in a way to be as efficient and performant as possible. I benchmarked it with a few common image processing
+frameworks (namely `image-rs` and ImageMagick), and the results were quite promising.
+
+<details>
+
+<summary><u class="cursor-pointer hover:text-white transition">View benchmarks</u></summary>
+
+### Decode GIF + Invert each frame + Encode GIF (600x600, 77 frames)
+Performed locally (10-cores) ([Source](https://github.com/jay3332/ril/blob/main/benches/invert_comparison.rs))
+
+| Benchmark                                     | Time (average of runs in 10 seconds, lower is better) |
+|-----------------------------------------------|-------------------------------------------------------|
+| ril (combinator)                              | 902.54 ms                                             |
+| ril (for-loop)                                | 922.08 ms                                             |
+| ril (low-level hardcoded GIF en/decoder)      | 902.28 ms                                             |
+| image-rs (low-level hardcoded GIF en/decoder) | 940.42 ms                                             |
+| Python, wand (ImageMagick)                    | 1049.09 ms                                            |
+
+### Rasterize and render text (Inter font, 20px, 1715 glyphs)
+Performed locally (10-cores) ([Source](https://github.com/jay3332/ril/blob/main/benches/text_comparison.rs))
+
+| Benchmark                                     | Time (average of runs in 10 seconds, lower is better) |
+|-----------------------------------------------|-------------------------------------------------------|
+| ril (combinator)                              | 1.5317 ms                                             |
+| image-rs + imageproc                          | 2.4332 ms                                             |
+</details>
+
+<details>
+
+<summary><u class="cursor-pointer hover:text-white transition">Code samples</u></summary>
+
+#### Open an image, invert it, and then save it:
+```rust
+use ril::prelude::*;
+
+fn main() -> ril::Result<()> {
+    let image = !Image::open("sample.png")?; // notice the `!` operator
+    image.save_inferred("inverted.png")?;
+
+    Ok(())
+}
+```
+
+or, why not use method chaining?
+```rust
+Image::open("sample.png")?
+    .not()  // std::ops::Not trait
+    .save_inferred("inverted.png")?;
+```
+
+#### Create a new black image, open the sample image, and paste it on top of the black image:
+```rust
+let image = Image::new(600, 600, Rgb::black());
+image.paste(100, 100, Image::open("sample.png")?);
+image.save_inferred("sample_on_black.png")?;
+```
+
+you can still use method chaining, but this accesses a lower level interface:
+```rust
+let image = Image::new(600, 600, Rgb::black())
+    .with(&Paste::new(Image::open("sample.png")?).with_position(100, 100))
+    .save_inferred("sample_on_black.png")?;
+```
+
+#### Open an image and mask it to a circle:
+
+```rust
+let image = Image::<Rgba>::open("sample.png")?;
+let (width, height) = image.dimensions();
+
+let ellipse =
+    Ellipse::from_bounding_box(0, 0, width, height).with_fill(L(255));
+
+let mask = Image::new(width, height, L(0));
+mask.draw(&ellipse);
+
+image.mask_alpha(&mask);
+image.save_inferred("sample_circle.png")?;
+```
+
+#### Open an animated image and invert each frame as they are decoded, then saving them:
+
+```rust
+let mut output = ImageSequence::<Rgba>::new();
+
+// ImageSequence::open is lazy
+for frame in ImageSequence::<Rgba>::open("sample.gif")? {
+    let frame = frame?;
+    frame.invert();
+    output.push(frame);
+
+    // or...
+    output.push_frame(!frame?);
+}
+
+output.save_inferred("inverted.gif")?;
+```
+
+#### Or, how about we encode each frame immediately without storing them in memory?
+```rust
+let mut stream = ImageSequence::<Rgba>::open("sample.gif")?;
+
+// Use the first frame to initialize the encoder
+let mut output = File::create("inverted.gif")?;
+let first_frame = stream.next().unwrap()?;
+let mut encoder = GifEncoder::new(&mut output, &first_frame)?;
+
+// Then, write the first frame into the GIF
+encoder.add_frame(&first_frame)?;
+
+// Now, invert each frame and write it into the GIF
+for frame in stream {
+    encoder.add_frame(&!frame?)?;
+}
+```
+
+#### Open an animated image and save each frame as separate PNGs as they are decoded:
+```rust
+ImageSequence::<Rgba>::open("sample.gif")?
+    .enumerate()
+    .for_each(|(idx, frame)| {
+        frame
+          .unwrap()
+          .save_inferred(format!("frames/{}.png", idx))
+          .unwrap();
+    });
+```
+
+#### Render text:
+```rust
+let mut image = Image::new(512, 256, Rgb::black());
+let font = Font::open("Arial.ttf", 36.0)?;
+
+let text = TextSegment::new(&font, "Hello, world", Rgb::white())
+    .with_position(20, 20);
+
+image.draw(&text);
+image.save_inferred("text.png")?;
+```
+
+</details>
 
