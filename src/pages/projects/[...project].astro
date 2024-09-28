@@ -47,11 +47,11 @@ const Content = await entry?.render().then(c => c.Content)
   </div>
 </Layout>
 
-<script>
+<script define:vars={{ slug }}>
   document.addEventListener('astro:page-load', () => {
     const currentCard = document.getElementById(`project__${slug}`)
     if (currentCard) {
-      currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      currentCard.scrollIntoView({ behavior: 'instant', block: 'center' })
     }
   })
 </script>

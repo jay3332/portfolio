@@ -157,6 +157,20 @@ declare module 'astro:content' {
   collection: "projects";
   data: InferEntrySchema<"projects">
 } & { render(): Render[".mdx"] };
+"tmt.mdx": {
+	id: "tmt.mdx";
+  slug: "tmt";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"turbo-vue.mdx": {
+	id: "turbo-vue.mdx";
+  slug: "turbo-vue";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
 };
 
 	};

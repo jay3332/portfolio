@@ -18,6 +18,7 @@ const DIAG_ARROW_CLASS =
       <a
         class="flex items-center text-sm font-semibold gap-x-1 text-white/80 hover:text-white/100 group/btn"
         href={`https://github.com/${data.repo ?? data.org}`}
+        target="_blank"
       >
         <Icon name="github" class="transition-all mr-0.5 text-base" />
         <span class="transition">GitHub</span>
@@ -30,6 +31,7 @@ const DIAG_ARROW_CLASS =
       <a
         class="flex items-center text-sm font-semibold gap-x-1 text-white/80 hover:text-white/100 group/btn"
         href={data.url}
+        target="_blank"
       >
         <Icon name="link" class="transition-all mr-0.5 text-base" />
         <span class="transition" set:html={data.label ?? "Visit Link"} />
