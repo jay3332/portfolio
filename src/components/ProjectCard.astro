@@ -1,6 +1,7 @@
 ---
 import ProjectLinks from "./ProjectLinks.astro";
 import { Icon } from "astro-icon/components"
+import ProjectSkills from "./ProjectSkills.astro";
 
 interface Props {
   slug?: string;
@@ -22,7 +23,7 @@ const { slug, project, entry } = Astro.props;
     entry ? "max-w-[48ch]" : "mobile:w-full"
   ]}
 >
-  {project.data.thumbnail && <img src={project.data.thumbnail} alt="" class="rounded-xl w-20 h-20 m-2">}
+  {project.data.icon && <img src={project.data.icon} alt="" class="rounded-xl w-20 h-20 m-2">}
   <div class="flex flex-col flex-grow my-1">
     <div class="flex flex-wrap items-center justify-between">
       <h2 class="transition underline-offset-2">
@@ -36,9 +37,7 @@ const { slug, project, entry } = Astro.props;
     <p class="font-light text-sm text-white/80 mt-0.5 flex-grow">{project.data.description}</p>
     <ProjectLinks data={project.data} />
     <div class="flex flex-wrap gap-1 mt-3">
-      {project.data.skills.map(s => (
-        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/40 text-accent-300 uppercase font-bold">{s}</span>
-      ))}
+      <ProjectSkills skills={project.data.skills} />
     </div>
   </div>
 </a>

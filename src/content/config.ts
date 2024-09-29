@@ -6,6 +6,7 @@ export const projectsSchema = z.object({
   url: z.string().url().optional(),
   label: z.string().optional(),
   timeline: z.string(),
+  icon: z.string().optional(),
   thumbnail: z.string().optional(),
   repo: z.string().regex(/\w+\/\w+/).optional(),
   skills: z.string().array(),

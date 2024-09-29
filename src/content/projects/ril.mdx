@@ -5,7 +5,8 @@ description: |
 timeline: Jul 2022 - Present
 url: https://crates.io/crates/ril
 label: crates.io
-thumbnail: /images/ril_thumbnail.png
+icon: /images/ril/icon.png
+thumbnail: /images/ril/thumbnail.png
 skills:
 - rust
 - image processing
@@ -13,10 +14,11 @@ repo: jay3332/ril
 active: true
 ---
 
-## Introduction
+<div class="md:text-center italic">
+Every day, a staggering 14 billion images flow through digital systems. <br /> How should our software handle these images?
+</div>
 
-Around 5 billion photos are taken every day. Of these, a significant portion is edited, processed, and distributed online.
-In addition to photos, there is also digital art, graphics, and animations—all of which are stored and shared as images.
+## Introduction
 
 With so many images, it's no wonder that image processing is a critical part of modern software development. Editing
 and processing images is a common task in many applications, from simple photo filters to complex image transformations.
@@ -25,17 +27,20 @@ I was inspired to create RIL after working on an image captioning pipeline that 
 This shouldn't matter if the image is static or animated, but I found that most image processing libraries neglect
 animated images, with me having to special-case the cumbersome handling of them in my code.
 
-## What is this project?
+## Project Overview
 
 RIL is an acronym for **<u>R</u>ust <u>I</u>maging <u>L</u>ibrary**, a name derived from the Python-equivalent PIL (Python Imaging Library).
 Inspired by the intuitive interface of PIL, RIL aims to provide a high-level, flexible, and accessible image processing
 experience to Rust developers.
 
-RIL is a general-purpose image processing library, supporting all sorts of image formats, operations, and functionality.
+RIL is a **general-purpose image processing library**, supporting all sorts of image formats, operations, and functionality.
 I designed RIL for not just static, single-frame image processing—which is what most image processing libraries are
 already good at—but for animated images such as GIFs and APNGs as well.
 
-![RIL Demo](/images/ril_demo.gif)
+![RIL Demo](/images/ril/demo.gif)
+
+Since its inception, RIL has grown to almost 100 stars on [GitHub](//github.com/jay3332/ril) and has been downloaded
+nearly 30,000 times on [crates.io](//crates.io/crates/ril), the official registry for Rust packages.
 
 ## Features
 

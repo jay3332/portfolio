@@ -1,0 +1,13 @@
+---
+interface Props {
+  skills: string[]
+}
+
+const { skills } = Astro.props
+---
+
+<>
+  {skills.map(s => (
+    <span class="px-2 py-0.5 text-xs rounded-full bg-accent/40 text-accent-300 uppercase font-bold">{s}</span>
+  ))}
+</>
