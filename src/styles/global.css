@@ -32,6 +32,12 @@ body {
       radial-gradient(at 10% 90%, rgb(168 45 247 / 0.13) 0px, transparent 60%);
 }
 
+main {
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.1) 1px, transparent 1px);
+  background-position: 0 0;
+  background-size: 18px 18px;
+}
+
 body::-webkit-scrollbar {
   display: none;
 }
