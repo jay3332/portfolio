@@ -2,19 +2,226 @@
 import Layout from "../../layouts/Layout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import {getCollection} from "astro:content";
+import { Icon } from "astro-icon/components";
 
 const allProjects = await getCollection('projects')
+const allSkills = Array.from(
+  new Map(
+    allProjects
+      .flatMap((project) => project.data.skills)
+      .map((skill) => [skill.toLowerCase(), skill])
+  )
+).map(([value, label]) => ({ value, label }));
 ---
 
 <Layout title="All Projects">
-  <!--<h1 class="font-title font-bold text-2xl text-center m-4">Project Catalog</h1>-->
-  <div class="flex flex-grow justify-center">
-    <div class="max-w-[172ch]">
-      <div class="grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 p-4 grid">
-        {allProjects.map(project => (
-          <ProjectCard project={project} />
-        ))}
+  <div class="mx-auto flex w-full max-w-[172ch] flex-grow flex-col px-4 py-6">
+    <div class="mb-4">
+      <div class="flex flex-col gap-1.5 md:flex-row md:items-start md:gap-3">
+        <span class="shrink-0 text-sm uppercase tracking-wider text-white/40 md:leading-8">Filter by Skill</span>
+        <div class="flex min-w-0 flex-1 items-start gap-2">
+          <div
+            id="skills-container"
+            class="skills-container is-collapsed flex min-w-0 flex-1 flex-wrap gap-2 overflow-hidden transition-[max-height] duration-200"
+          >
+            <button
+              class="skill-filter is-active rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
+                text-white/70 transition hover:border-white/35 hover:text-white/95"
+              type="button"
+              data-skill="all"
+            >
+              All
+            </button>
+            {allSkills.map((skill) => (
+              <button
+                class="skill-filter rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
+                  text-white/70 transition hover:border-white/35 hover:text-white/95"
+                type="button"
+                data-skill={skill.value}
+              >
+                {skill.label}
+              </button>
+            ))}
+          </div>
+          <button
+            id="skills-toggle"
+            class="hidden min-h-8 shrink-0 items-center gap-2 whitespace-nowrap text-xs font-bold text-white/75 transition-colors hover:text-white/95"
+            type="button"
+            aria-expanded="false"
+          >
+            <span id="skills-toggle-text">More</span>
+            <Icon id="skills-toggle-icon" name="chevron-right" class="text-xs transition-transform duration-150" />
+          </button>
+        </div>
       </div>
+    </div>
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3" id="projects-grid">
+      {allProjects.map(project => (
+        <div data-project-card data-skills={project.data.skills.map((skill) => skill.toLowerCase()).join(",")}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
     </div>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const teardown = new AbortController();
+    const { signal } = teardown;
+    document.addEventListener("astro:before-swap", () => teardown.abort(), { once: true });
+
+    const filters = Array.from(document.querySelectorAll(".skill-filter"));
+    const cards = Array.from(document.querySelectorAll("[data-project-card]"));
+    const cardIndex = cards.map((card) => ({
+      card,
+      skills: new Set(
+        (card.getAttribute("data-skills") || "")
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean)
+      ),
+    }));
+    const skillsContainer = document.getElementById("skills-container");
+    const skillsToggle = document.getElementById("skills-toggle");
+    const skillsToggleText = document.getElementById("skills-toggle-text");
+    const skillsToggleIcon = document.getElementById("skills-toggle-icon");
+    const selectedSkills = new Set();
+    let pendingOverflowMeasure = 0;
+
+    const measureSkillsOverflow = () => {
+      if (!skillsContainer || !skillsToggle) return;
+
+      const chips = Array.from(skillsContainer.querySelectorAll(".skill-filter"));
+      if (chips.length === 0) {
+        skillsToggle.classList.add("hidden");
+        return;
+      }
+
+      const firstChipHeight = chips[0].getBoundingClientRect().height;
+      const collapsedHeight = Math.ceil(firstChipHeight);
+      const hasOverflow = skillsContainer.scrollHeight > collapsedHeight + 2;
+
+      skillsContainer.style.setProperty("--collapsed-height", `${collapsedHeight}px`);
+      skillsToggle.classList.toggle("hidden", !hasOverflow);
+      skillsToggle.classList.toggle("inline-flex", hasOverflow);
+
+      if (!hasOverflow) {
+        skillsContainer.classList.remove("is-collapsed", "is-expanded");
+        skillsToggle.setAttribute("aria-expanded", "false");
+        if (skillsToggleText) skillsToggleText.textContent = "More";
+        skillsToggleIcon?.classList.remove("rotate-90");
+        skillsToggle.classList.remove("inline-flex");
+        return;
+      }
+
+      if (!skillsContainer.classList.contains("is-expanded")) {
+        skillsContainer.classList.add("is-collapsed");
+      }
+    };
+
+    const setFilterButtonState = () => {
+      filters.forEach((button) => {
+        const skill = button.getAttribute("data-skill");
+        const isAll = skill === "all";
+        const isActive = isAll ? selectedSkills.size === 0 : selectedSkills.has(skill);
+
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    };
+
+    const updateUrl = () => {
+      const url = new URL(window.location.href);
+      if (selectedSkills.size > 0) {
+        url.searchParams.set("skills", Array.from(selectedSkills).join(","));
+      } else {
+        url.searchParams.delete("skills");
+      }
+      if (url.toString() !== window.location.href) {
+        window.history.replaceState({}, "", url);
+      }
+    };
+
+    const applyFilter = () => {
+      let visible = 0;
+
+      cardIndex.forEach(({ card, skills }) => {
+        const show = selectedSkills.size === 0 || Array.from(skills).some((skill) => selectedSkills.has(skill));
+        card.toggleAttribute("hidden", !show);
+        if (show) visible += 1;
+      });
+
+      setFilterButtonState();
+      updateUrl();
+    };
+
+    filters.forEach((button) => {
+      button.addEventListener("click", () => {
+        const skill = button.getAttribute("data-skill");
+        if (!skill) return;
+
+        if (skill === "all") {
+          selectedSkills.clear();
+        } else if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+        } else {
+          selectedSkills.add(skill);
+        }
+
+        applyFilter();
+      }, { signal });
+    });
+
+    const urlSkills = new URL(window.location.href).searchParams.get("skills");
+    if (urlSkills) {
+      urlSkills.split(",").map((skill) => skill.trim().toLowerCase()).filter(Boolean).forEach((skill) => {
+        selectedSkills.add(skill);
+      });
+    }
+
+    if (skillsToggle && skillsContainer) {
+      skillsToggle.addEventListener("click", () => {
+        const isExpanded = skillsContainer.classList.toggle("is-expanded");
+        skillsContainer.classList.toggle("is-collapsed", !isExpanded);
+        skillsToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        if (skillsToggleText) skillsToggleText.textContent = isExpanded ? "Less" : "More";
+        skillsToggleIcon?.classList.toggle("rotate-90", isExpanded);
+      }, { signal });
+    }
+
+    const scheduleOverflowMeasure = () => {
+      if (pendingOverflowMeasure) cancelAnimationFrame(pendingOverflowMeasure);
+      pendingOverflowMeasure = requestAnimationFrame(() => {
+        pendingOverflowMeasure = 0;
+        measureSkillsOverflow();
+      });
+    };
+
+    const resizeObserver = skillsContainer ? new ResizeObserver(scheduleOverflowMeasure) : null;
+    if (skillsContainer && resizeObserver) {
+      resizeObserver.observe(skillsContainer);
+      signal.addEventListener("abort", () => resizeObserver.disconnect(), { once: true });
+    }
+    window.addEventListener("resize", scheduleOverflowMeasure, { signal });
+    window.addEventListener("load", scheduleOverflowMeasure, { signal });
+    measureSkillsOverflow();
+    applyFilter();
+  });
+</script>
+
+<style>
+  .skills-container.is-collapsed {
+    max-height: var(--collapsed-height, 2.1rem);
+  }
+
+  .skills-container.is-expanded {
+    max-height: 24rem;
+  }
+
+  .skill-filter.is-active {
+    border-color: rgb(59 130 246 / 0.6);
+    background: rgb(59 130 246 / 0.25);
+    color: white;
+  }
+</style>

@@ -50,8 +50,8 @@ body::-webkit-scrollbar {
 ::-webkit-scrollbar-thumb {
   background-color: rgb(130 130 160 / 0.2);
   border-radius: 0.1rem;
-  &:hover { background-color: rgb(130 130 160 / 0.4) }
 }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(130 130 160 / 0.4) }
 ::-webkit-scrollbar-corner { background: transparent }
 
 * {
