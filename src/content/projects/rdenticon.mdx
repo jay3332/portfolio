@@ -1,0 +1,81 @@
+---
+name: rdenticon
+description: |
+    A port of Jdenticon to Rust using RIL. Generates unique and deterministic identicons.
+timeline: Jan 2023 - Feb 2023
+url: https://crates.io/crates/rdenticon
+label: crates.io
+icon: /images/rdenticon/icon.png
+thumbnail: /images/rdenticon/thumbnail.png
+skills:
+- rust
+- image processing
+repo: jay3332/rdenticon
+active: false
+order: 40
+---
+
+<div class="md:text-center italic">
+  Every hash is a face. Every face is unique.
+</div>
+
+## Background
+
+**Identicons** are algorithmically generated icons derived from a hash—typically used as default
+avatars for users who haven't set a profile picture. You've seen them on GitHub: the colorful
+geometric grids that appear before you upload a photo.
+
+The original [Jdenticon](https://jdenticon.com) library is a well-regarded identicon generator
+written in JavaScript. When building [Adapt](/projects/adapt), I needed identicon generation on
+the server side in Rust—but no Rust implementation existed. Rather than shell out to Node.js,
+I ported the algorithm directly.
+
+## What rdenticon Generates
+
+Given any string or byte sequence, rdenticon produces a **deterministic, symmetric, geometric icon**:
+
+- The input is hashed with SHA-1.
+- The hash bytes are interpreted as parameters: hue, saturation, lightness, and shape selection.
+- A set of geometric primitives (triangles, rectangles, circles) is drawn onto a grid in a
+  rotationally symmetric pattern.
+- The result is rendered as an `Image` using [RIL](/projects/ril).
+
+The same input always produces the same icon, making it suitable for use as a stable default avatar.
+
+## Usage
+
+```rust
+use rdenticon::Identicon;
+use ril::prelude::*;
+
+// Generate from any hashable value
+let icon: Image<Rgba> = Identicon::new("user@example.com")
+    .with_size(128)
+    .render();
+
+icon.save_inferred("avatar.png").unwrap();
+```
+
+Icons can be generated at any resolution—the algorithm is vector-based internally and rasterized
+at the requested output size, so there's no quality loss at large dimensions.
+
+## Implementation Notes
+
+The core challenge in porting Jdenticon was faithfully reproducing its geometric placement rules.
+Jdenticon uses a specific set of shape functions—each taking a `cell` index, a `x/y` grid position,
+and a color—and composites them onto the canvas in a fixed order. The shapes are deliberately chosen
+to look different in each of the four rotation states (0°, 90°, 180°, 270°), which is what gives
+each identicon its unique character.
+
+The Rust port uses [RIL](/projects/ril) for all drawing operations: filled polygons, ellipses,
+and rectangles are drawn using RIL's `Draw` trait, keeping the rendering pipeline entirely in Rust
+with no FFI overhead.
+
+![rdenticon sample output](/images/rdenticon/thumbnail.png)
+
+## Integration with Adapt
+
+rdenticon was built specifically to serve default avatars in [Adapt](/projects/adapt). When a new
+user registers without uploading a profile picture, the CDN calls rdenticon with the user's ID
+and caches the resulting PNG. The icon is stable for the lifetime of the account but can be
+regenerated at any resolution on demand.

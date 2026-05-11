@@ -2,16 +2,137 @@
 name: Terbium
 description: |
   Easy-to-use, fast, and robust programming language and compiler, featuring a simple syntax and powerful optimizations.
-timeline: May 2022 - May 2024
+timeline: May 2022 - Present
 url: https://terbium-lilac.vercel.app
 label: Terbium Guide
 icon: /images/terbium/icon.png
+thumbnail: /images/terbium/thumbnail.png
 skills:
 - rust
 - llvm
 - compilers
 repo: terbium-lang/terbium
 active: true
+order: 10
 ---
 
-The content here is unfinished
+<div class="md:text-center italic">
+  Write bug-free code that runs at native performance—without the complexity.
+</div>
+
+## Background
+
+Most programming languages make you choose: **easy to write, or fast to run**. Python is approachable but
+slow; Rust is blazing fast but demands a steep learning curve. I wanted to explore whether those goals
+are actually at odds, or whether a language could be designed from the start to excel at both.
+
+Terbium is my attempt at an answer—a compiled, statically typed language that aims for the readability
+of modern scripting languages while compiling down to native machine code via **LLVM**.
+
+## Language Design
+
+Terbium is designed around seven core principles:
+
+- **Concise** — Less boilerplate. Terbium favors short, expressive syntax over verbosity.
+- **Readable** — Code should communicate intent. Terbium avoids obscure symbols and prefers
+  keywords that read naturally.
+- **Simple** — The language spec should fit in your head. No hidden footguns, no undefined behavior.
+- **Performant** — Compilation to native code via LLVM means Terbium programs can match C/C++ performance
+  where it matters.
+- **Robust** — The type system and null-safety features catch entire classes of bugs at compile time.
+- **Rapid** — Quick iteration. The language is designed to be fast to prototype in as well as to compile.
+- **Typed** — Full static typing with inference, so types protect you without cluttering your code.
+
+## Code Examples
+
+### Hello, World
+
+```terbium
+func main() {
+    println("Hello, world!")
+}
+```
+
+### Fibonacci (recursive)
+
+```terbium
+func fib(n: int) -> int {
+    if n <= 1 { return n }
+    fib(n - 1) + fib(n - 2)
+}
+```
+
+### Optional Values
+
+Terbium has first-class optional types, eliminating null pointer exceptions:
+
+```terbium
+func find_user(id: int) -> User? {
+    // returns null if not found
+}
+
+let user = find_user(42)
+if let u = user {
+    println(u.name)
+}
+```
+
+### Error Handling
+
+Errors are values, not exceptions:
+
+```terbium
+func read_file(path: str) -> str | IOError {
+    // ...
+}
+
+let content = read_file("data.txt") catch err {
+    println("Failed: {err}")
+    return
+}
+```
+
+### Traits & Subtyping
+
+```terbium
+trait Greet {
+    func greet(self) -> str
+}
+
+struct Person {
+    name: str
+}
+
+impl Greet for Person {
+    func greet(self) -> str {
+        "Hello, I'm {self.name}!"
+    }
+}
+```
+
+## Compiler Architecture
+
+Terbium's compiler is written in Rust and follows a classical multi-stage pipeline:
+
+1. **Lexer** — Converts source text into a flat token stream.
+2. **Parser** — Builds a typed Abstract Syntax Tree (AST) from the token stream.
+3. **Type Checker & Inference** — Resolves and verifies types across the AST. Terbium uses
+   Hindley-Milner-style bidirectional type inference so that most type annotations are optional.
+4. **IR Lowering** — The type-checked AST is lowered into an intermediate representation (IR)
+   closer to LLVM's model—explicit control flow, explicit memory operations, no high-level sugar.
+5. **LLVM Codegen** — The IR is translated into LLVM IR, which LLVM's optimizer and backend
+   then compile to native machine code. This gives Terbium access to decades of compiler
+   optimization research essentially for free.
+
+![Terbium](/images/terbium/thumbnail.png)
+
+## LLVM Backend
+
+Choosing LLVM as the backend was one of the most impactful decisions in the project. LLVM provides:
+
+- **Mature optimizations** — inlining, dead code elimination, loop vectorization, and more.
+- **Multi-target support** — the same IR compiles to x86-64, ARM, WebAssembly, and other targets.
+- **Proven correctness** — used in production by Clang, Rust, Swift, and Julia.
+
+The Terbium compiler uses [inkwell](https://github.com/TheDan64/inkwell), a safe Rust wrapper
+around the LLVM C API, to emit LLVM IR programmatically from the lowered IR.

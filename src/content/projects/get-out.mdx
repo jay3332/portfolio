@@ -1,0 +1,58 @@
+---
+name: GetOut!
+description: |
+  Multipurpose event planner and discovery platform. Submission for University of Maryland's 2026 Bitcamp hackathon.
+timeline: Apr 2026
+url: https://devpost.com/software/get-out-wqicad
+label: Devpost
+icon: /images/getout/icon.png
+thumbnail: /images/getout/thumbnail.png
+skills:
+- nextjs
+- typescript
+- tailwind
+- python
+- fastapi
+- vercel
+- supabase
+- postgres
+repo: jay3332/get-out
+active: false
+order: 300
+---
+
+## Inspiration
+
+Planning a trip always starts with a group chat message “We should go to Miami!” Everybody gets excited and the planning begins. But for one reason or another, maybe they can’t find the time or they can’t agree on an itinerary, the planning fizzles out. For those whose trips don’t fizzle out, the long threads of messages in group chats become hard to manage. Over time details get lost and convoluted. 
+
+Then, there is the issue of actually getting there, which is an entirely different conversation.
+
+
+## What it does
+GetOut! creates a collaborative workspace for both big and small groups to plan trips and outings. Once accepting an invite to join an event, users can add, edit, remove, comment, and vote on different activities pulled from TripAdvisor. Additionally, users can create and join optional activities and add transportation and lodging information pulled from a scraper and TripAdvisor API. It then summarizes costs, breaking it down by type, by user, and based on what activities, transportation, and lodging they selected. Users can also interact with an AI chatbot that suggests activities to do. 
+
+## How we built it
+
+We used Next.js and tailwind CSS to create the frontend and used figma to design the different pages. The backend is written in python using FastAPI, with a serverless SQL database in Supabase. The AI functionality uses Gemini API. 
+
+## Challenges we ran into
+
+With a complex web app like GetOut! the api routes get complicated fast (We have over 50 routes) and designing that system was an early challenge.
+
+Our web app uses the TripAdvisor API to get the activity options and hotel options. However, the API only work with latitude and longitude, so we used google maps API to convert location into latitude and longitude to pass into TripAdvisor API.  
+
+
+## Accomplishments that we're proud of
+
+Having and delivering on an ambitious scope
+Integrating various APIs for quality of life
+
+## What we learned
+
+From a technical perspective, we learned Supabase, Figma, and how to actually deploy an app. Also, from a Non-technical perspective we improved on our time-estimation skills and improved on avoiding scope creep. Additionally, we selected a good project size. 
+
+
+## What's next for Get Out!
+
+If we had more time, we would add a better method to sync calendars as the current method is somewhat clunky and [you a subject here, I think you mean the calendar but idk] adds custom RSVP forms to allow event organizers to get specific data from users. 
+I think the clarity issue I have is coming from not understanding the tech stuff your talking about. 

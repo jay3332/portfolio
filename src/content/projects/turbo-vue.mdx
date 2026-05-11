@@ -3,11 +3,11 @@ name: TurboVUE
 description: |
   A lightweight third-party client for Synergy SIS, allowing students to quickly view and analyze their grades,
   assignments, and schedule.
-timeline: Apr 2024 - Present
+timeline: Apr 2024 - Aug 2025
 url: https://grades.jay3332.tech
 label: Visit TurboVUE
 icon: /images/turbovue/icon.png
-thumbnail: /images/turbovue/assignments.png
+thumbnail: /images/turbovue/graph.png
 skills:
 - typescript
 - python
@@ -17,10 +17,73 @@ skills:
 - pwa
 repo: jay3332/turbo-vue
 active: true
+order: 20
 ---
 
-## Introduction
+<div class="md:text-center italic">
+  Your grades, fast—without the five-second load time.
+</div>
 
-Our school district uses a student information system (SIS) called Synergy, which is what students use to view their
-grades, assignments, and schedules. The official Synergy client is provided by Edupoint, but it has poor downtime and
-stability,
+## Background
+
+My school district uses [Synergy](https://www.edupoint.com/Products/StudentVUE), a student information system
+(SIS) made by Edupoint, for managing grades, assignments, and schedules. The official StudentVUE web client
+works—but barely. It's built on legacy technology, suffers from frequent downtime, loads slowly, and buries
+the information students actually care about under layers of navigation.
+
+As someone who checks grades frequently, I found myself spending more time waiting for the page to load than
+actually reading anything useful. TurboVUE is my replacement: a fast, clean third-party client that shows
+what matters.
+
+## How It Works
+
+StudentVUE's backend exposes a SOAP API that the official client uses—but it's not publicly documented and
+isn't accessible from the browser due to CORS restrictions. TurboVUE works around this with a small
+**Python proxy server** that:
+
+1. Accepts requests from the frontend over a simple JSON API.
+2. Forwards them to the StudentVUE SOAP backend with the user's credentials.
+3. Parses the XML response and returns clean, structured JSON.
+
+This architecture keeps the frontend simple and stateless—it never touches the SOAP API directly, and all
+credential handling stays server-side.
+
+![TurboVUE](/images/turbovue/thumbnail.png)
+
+## Features
+
+### Streamlined Gradebook
+
+The gradebook is the core of TurboVUE. Assignments are displayed in a clean list, color-coded by score
+relative to the class average. Grading periods are easy to navigate, and the overall grade is always
+visible at a glance.
+
+### "What If" Grade Calculator
+
+One of TurboVUE's most-used features is the **What If calculator**, which lets students model how
+hypothetical assignment scores would affect their final grade. Change a score, add an assignment that
+hasn't been graded yet, or mark something as dropped—the grade updates in real time.
+
+### Grade Analysis & Graphs
+
+TurboVUE plots grade history over time so students can spot trends across a grading period. Assignments
+are also broken down by category (tests, homework, participation) so it's easy to see where points are
+being lost.
+
+### PWA Support
+
+TurboVUE is packaged as a **Progressive Web App**, meaning students can install it to their home screen
+on iOS or Android and get an app-like experience without going through an app store.
+
+## Technical Details
+
+The frontend is built with [Solid.js](https://solidjs.com) and Tailwind CSS. Solid's fine-grained
+reactivity is a natural fit here—grade data updates flow directly to the relevant DOM nodes without
+triggering unnecessary re-renders across the entire page.
+
+The Python backend is a lightweight [Flask](https://flask.palletsprojects.com) server. SOAP request
+construction and XML parsing are handled with [zeep](https://docs.python-zeep.org) and
+[lxml](https://lxml.de), keeping the proxy thin and easy to deploy.
+
+> **Note:** TurboVUE is an independent project and is not affiliated with or endorsed by Edupoint or
+> any school district. It works by interacting with the same API that the official StudentVUE app uses.

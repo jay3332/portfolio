@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog');
+  return entries.map(entry => ({
+    params: { slug: entry.id }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+if (!entry)
+  return Astro.redirect('/404')
+
+const { Content } = await render(entry);
+---
+
+<Layout title={entry.data.title}>
+  <div class="mx-auto py-8 flex-grow">
+    <h1>{entry.data.title}</h1>
+    <article class="prose mt-10 [&>*>img]:!rounded-2xl">
+      <Content />
+    </article>
+  </div>
+</Layout>
+
+<style is:global>
+  .typst-frame .typst-text * {
+    fill: white;
+  }
+
+  .typst-frame .typst-shape {
+    stroke: white;
+  }
+</style>
