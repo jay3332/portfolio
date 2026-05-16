@@ -21,6 +21,9 @@
 #let bb(body) = _mathml-fix(_utils._dict-types.variant, math.bb, body, variant: "bb")
 #let cal(body) = _mathml-fix(_utils._dict-types.variant, math.cal, body, variant: "cal")
 
+#let dif = [#sym.space.thin #upright(symbol("d"))]
+#let Dif = [#sym.space.thin #upright(symbol("D"))]
+
 // Math helpers
 #let bf(content) = $upright(bold(#content))$
 #let dd(variable) = $dif#variable$
