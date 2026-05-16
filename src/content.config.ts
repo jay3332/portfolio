@@ -1,6 +1,7 @@
 import { z } from 'astro/zod';
 import { defineCollection } from "astro:content";
 import { glob } from 'astro/loaders';
+import { typstLoader } from './lib/typst-loader';
 
 export const projectsSchema = z.object({
   name: z.string(),
@@ -32,11 +33,29 @@ export const blogSchema = z.object({
 });
 
 const blogCollection = defineCollection({
-  loader: glob({ pattern: "**/*", base: "./src/content/blog" }),
+  loader: typstLoader({
+    base: 'src/content/blog',
+    inputs: (id) => ({ 'x-slug': id, 'x-target': 'web' }),
+    fontArgs: [{ fontPaths: ['public/fonts/ibm-plex-serif/fonts/complete', 'public/fonts/ibm-plex-math/fonts/complete'] }],
+  }),
   schema: blogSchema,
+});
+
+export const bookPageSchema = z.object({
+  title: z.string(),
+  date: z.coerce.date().optional(),
+  tags: z.array(z.string()).default([]),
+  brief: z.string().optional(),
+  thumbnail: z.string().optional(),
+});
+
+const bookPagesCollection = defineCollection({
+  loader: glob({ pattern: "**/*", base: "./src/content/books" }),
+  schema: bookPageSchema,
 });
 
 export const collections = {
   projects: projectsCollection,
   blog: blogCollection,
+  book: bookPagesCollection,
 }

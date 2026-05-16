@@ -24,14 +24,13 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
 ---
 
 <Layout title="Projects">
-  <!-- ── Hero ────────────────────────────────────────────── -->
   <section class="relative overflow-hidden">
     <div class="relative z-[1] mx-auto w-full max-w-[130ch] px-8 pt-12 pb-20">
       <h1 class="hero-title mb-[0.6rem] text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.01em] text-white/90">
         Personal Projects
       </h1>
       <p class="mb-6 max-w-[55ch] text-[0.95rem] leading-[1.65] text-white/50">
-        This page features a few open-source software projects I've worked on over the past years.
+        A few open-source software projects I've worked on over the past years.
       </p>
       <div class="flex flex-wrap gap-3">
         <a href="#arc" class="btn btn-accent btn-sm">Featured</a>
@@ -40,9 +39,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     </div>
   </section>
 
-  <!-- ── Featured Arc ─────────────────────────────────────── -->
   <section id="arc" class="relative mx-auto max-w-[130ch] overflow-x-clip px-8 pt-2 pb-24">
-    <!-- Timeline track (desktop only) -->
     <div
       id="tl-track"
       class="absolute hidden lg:block top-12 bottom-12 w-[2px] rounded-[1px] bg-white/[0.07] left-1/2 -translate-x-1/2"
@@ -64,10 +61,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
           data-timeline={project.data.timeline}
           style={`--rgb:${ac.rgb};--dot:${ac.dot};`}
         >
-          <!-- Per-project halo glow -->
           <div class="entry-halo" aria-hidden="true"></div>
-
-          <!-- Two-column body (desktop) / stacked (mobile) -->
           <div class="entry-body relative z-[1] flex flex-col gap-6">
             <div class="entry-text" data-slide={flip ? "right" : "left"}>
               <div class="entry-text-head">
@@ -80,7 +74,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
                     class="entry-project-icon"
                   />
                 )}
-                <h2 class="entry-name">
+                <h2 class="font-title entry-name">
                   <a href={`/projects/${project.id}`} class="name-link group">
                     {project.data.name}
                     <Icon name="arrow-right" class="name-arrow" />
@@ -128,7 +122,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     })}
   </section>
 
-  <!-- ── Project Rail ──────────────────────────────────────── -->
   <section class="rail-wrap mx-auto max-w-[130ch] px-8 pt-8 pb-20" data-reveal>
     <header class="mb-5 flex items-end justify-between gap-4">
       <div>
@@ -186,7 +179,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
                   class="shrink-0 text-white/35 transition-[transform,color] duration-200 group-hover:translate-x-[3px] group-hover:text-white"
                 />
               </div>
-              <p class="mb-2 text-[0.65rem] uppercase tracking-[0.1em] text-white/45">
+              <p class="mb-2 text-[0.65rem] text-white/45">
                 {project.data.timeline}
               </p>
               <p class="mb-3 flex-1 text-[0.9rem] leading-[1.55] text-white/75">
@@ -202,7 +195,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     </div>
 
     <div class="mt-5 flex justify-center sm:hidden">
-      <a href="/projects/all" class="btn btn-outline btn-sm">View all projects →</a>
+      <a href="/projects/all" class="btn btn-outline btn-sm">View all projects</a>
     </div>
   </section>
 </Layout>
@@ -214,7 +207,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     document.addEventListener("astro:before-swap", () => teardown.abort(), { once: true });
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // ── Arc entry intersection observer ──
     const arcEntries = document.querySelectorAll("[data-arc]");
     const revealEls = document.querySelectorAll("[data-reveal]");
 
@@ -259,12 +251,10 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
 </script>
 
 <style>
-  /* Hero title font */
   .hero-title {
     font-family: var(--font-title, "Mona Sans", "Inter var", sans-serif);
   }
 
-  /* Entry halo glow */
   .entry-halo {
     position: absolute;
     width: 30rem;
@@ -290,7 +280,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     opacity: 0.75;
   }
 
-  /* Entry text — slide-in animation on scroll */
   .entry-text {
     opacity: 0;
     transform: translateX(-1.5rem);
@@ -306,9 +295,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     transform: translateX(0);
   }
 
-  /* Project name */
   .entry-name {
-    font-family: var(--font-title, "Mona Sans", "Inter var", sans-serif);
     font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 900;
     line-height: 1.05;
@@ -360,12 +347,10 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     gap: 1rem;
   }
 
-  /* ProjectLinks wraps its links in a div with mt-2; strip that inside entry-actions */
   .entry-actions :global(div) {
     margin-top: 0;
   }
 
-  /* Icon shown inline with the project title */
   .entry-text-head {
     display: flex;
     align-items: center;
@@ -382,7 +367,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     display: block;
   }
 
-  /* Entry media — slide-in animation on scroll */
   .entry-media {
     opacity: 0;
     transform: translateX(1.5rem);
@@ -439,11 +423,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     z-index: -1;
   }
 
-  /* ═══════════════════════════════════════════════════════
-     DESKTOP ARC LAYOUT (centered timeline, left/right alternating)
-  ═══════════════════════════════════════════════════════ */
   @media (min-width: 1024px) {
-    /* 3-column body: text | center-spacer (timeline sits here) | media */
     .entry-body {
       display: grid;
       grid-template-columns: 1fr 100px 1fr;
@@ -451,7 +431,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
       gap: 0;
     }
 
-    /* Normal: text in col 1, media in col 3 */
+    /* text in col 1, media in col 3 */
     .arc-entry:not(.arc-entry--flip) .entry-text {
       grid-column: 1;
       grid-row: 1;
@@ -463,7 +443,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
       padding-left: 2.5rem;
     }
 
-    /* Flip: media in col 1, text in col 3 */
+    /* media in col 1, text in col 3 */
     .arc-entry--flip .entry-text {
       grid-column: 3;
       grid-row: 1;
@@ -486,10 +466,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     }
   }
 
-  /* ═══════════════════════════════════════════════════════
-     RAIL — only opacity/transform transition kept here;
-     layout is fully handled by Tailwind in the HTML.
-  ═══════════════════════════════════════════════════════ */
   .rail-wrap {
     opacity: 0;
     transform: translateY(1.5rem);
@@ -501,7 +477,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     transform: translateY(0);
   }
 
-  /* "View All" CTA card special styling */
   .rail-cta {
     border-style: dashed;
     border-color: rgb(94 234 212 / 0.35);
