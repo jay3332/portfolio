@@ -5,11 +5,11 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from "@astrojs/cloudflare";
 import icon from "astro-icon";
 import { typst } from 'astro-typst';
-import remarkMath from 'remark-math';
+// import remarkMath from 'remark-math';
 
-import 'katex';
-import 'katex/contrib/mhchem';
-import rehypeKatex from 'rehype-katex';
+// import 'katex';
+// import 'katex/contrib/mhchem';
+// import rehypeKatex from 'rehype-katex';
 
 import terbiumLangBase from './terbium.tmLanguage.json';
 
@@ -43,8 +43,8 @@ const terbiumLang = {
   scopeName: 'source.terbium',
 };
 const mdxConfig = {
-  remarkPlugins: [remarkMath],
-  rehypePlugins: [rehypeKatex],
+  // remarkPlugins: [remarkMath],
+  // rehypePlugins: [rehypeKatex],
   shikiConfig: { theme: 'houston', langs: [terbiumLang] },
 };
 
