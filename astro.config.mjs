@@ -53,6 +53,9 @@ export default defineConfig({
   site: 'https://jay3332.tech',
   integrations: [typstConfig, sitemap(), mdx(mdxConfig), icon()],
   output: "server",
-  markdown: mdxConfig,
+
   // adapter: cloudflare(),
+  markdown: mdxConfig,
+
+  adapter: cloudflare(),
 });
