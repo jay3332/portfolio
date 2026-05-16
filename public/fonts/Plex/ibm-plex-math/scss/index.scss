@@ -1,0 +1,23 @@
+@use 'sass:map';
+@use './tools/' as tools;
+
+@use 'regular/index' as regular;
+
+$font-prefix: '..' !default;
+$-font-weights: (
+	regular: true
+);
+$font-weights: () !default;
+$font-weights: map.merge($-font-weights, $font-weights);
+
+@mixin all($font-prefix: $font-prefix) {
+	@if tools.enabled($font-weights, 'regular') {
+		@include regular.all($font-prefix);
+	}
+}
+
+@mixin default($font-prefix: $font-prefix) {
+	@if tools.enabled($font-weights, 'regular') {
+		@include regular.all($font-prefix);
+	}
+}

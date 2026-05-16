@@ -11,20 +11,21 @@ import 'katex';
 import 'katex/contrib/mhchem';
 import rehypeKatex from 'rehype-katex';
 
-import terbiumLang from './terbium.tmLanguage.json';
+import terbiumLangBase from './terbium.tmLanguage.json';
 
 const typstConfig = typst({
   options: {
     remPx: 14,
+    "x-target": "web",
   },
-  target: (id) => {
-    console.debug(`Detecting ${id}`);
-    if (id.endsWith('.svg.typ') || id.includes('/svg/'))
-      return "svg";
-    return "html";
-  },
+  default: "html",
+  target: () => "html",
+  output: "html",
   // === Use html-text output rather than hAST ===
   htmlMode: "text", // added in v0.12.3
+  fontArgs: [{
+    fontPaths: ['public/fonts/ibm-plex-serif/fonts/complete', 'public/fonts/ibm-plex-math/fonts/complete'],
+  }],
   // === <img src="xxx.svg"> instead of inlined <svg> ===
   // emitSvg: true,
   // emitSvgDir: ".astro/typst"
@@ -36,7 +37,7 @@ const typstConfig = typst({
 });
 
 const terbiumLang = {
-  ...terbiumLang,
+  ...terbiumLangBase,
   name: 'terbium',
   id: 'terbium',
   scopeName: 'source.terbium',
