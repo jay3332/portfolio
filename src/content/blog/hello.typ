@@ -1,138 +1,63 @@
 #import "../root.typ": *
 
-#show: blog-post.with(title: "Test Blog", date: "2026-05-10")
-#show math.equation: x => box(html.frame(x))
+#show: blog-post.with(title: "Test Blog", date: "2026-05-09")
 
-= hi
+= Hi this is test blog
 
-hi this is blog
+```rs
+/// Extract all snowflake IDs surrounded by <@!? and >, called mentions, from a string.
+#[must_use]
+pub fn extract_mentions(s: &str) -> Vec<u64> {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
 
-#stack(
-  line(length: 100%, stroke: 1.0pt),
-  line(length: 100%, stroke: 1.0pt),
-  spacing: 2pt,
-)
-
-#show math.equation.where(block: true): eq => {
-  block(width: 100%, inset: 0pt, align(center, eq))
+    let regex = REGEX.get_or_init(|| Regex::new(r"<@!?(\d+)>").unwrap());
+    regex
+        .captures_iter(s)
+        .map(|c| c.get(1).unwrap().as_str().parse().unwrap())
+        .collect::<Vec<_>>()
 }
+```
 
-#set enum(numbering: "1.a.")
+== Eigenproof
 
-+ Prove that for all integers $n$, $k$, and $r$ for $r <= k <= n$ that:
++ Sets $A$ and $B$ are defined as follows:
   $
-    binom(n, k) dot binom(k, r) = binom(n, r) dot binom(n - r, k - r).
+    A &= {n in ZZ | n = 8r - 3 "for some integer" r} \
+    B &= {m in ZZ | m = 4s + 1 "for some integer" s}.
   $
+  + Prove that $A subset.eq B$.
+  + Disprove that $B subset.eq A$.
 
 #line(length: 100%, stroke: 0.5pt)
 
-_Proof._
+#set enum(numbering: "a.")
 
-  *Lemma 1.* The factorial expansion of $binom(n, r)$ is: <lemma-1>
-  $
-    binom(n, r) = n!/(r! (n - r)!).
-  $
++ $A subset.eq B$. _Proof._
 
-  By #link(<lemma-1>)[Lemma 1], we can rewrite the left-hand side of the equation as follows:
-  $
-    binom(n, k) dot binom(k, r) 
-    &= (n!/(k! (n - k)!)) dot (k!/(r! (k - r)!)) \
-    &= (n! k!)/(k! r! (n - k)! (k - r)!) \
-    &= n!/(r! (n - k)! (k - r)!).
-  $
+  Suppose $x$ is an element of set $A$, so $x = 8r - 3$ for some integer $r$. To prove $A subset.eq B$, we must show that $x$ is also an element of set $B$, so $x = 4s + 1$ for some integer $s$.
 
-  By #link(<lemma-1>)[Lemma 1], we can rewrite the right-hand side of the equation as follows:
+  We can rewrite $x$ as follows:
   $
-    binom(n, r) dot binom(n - r, k - r) 
-    &= (n!/(r! (n - r)!)) dot ((n - r)!/((k - r)! ((n - r) - (k - r))!)) \
-    &= (n! (n - r)!)/(r! (n - r)! (k - r)! ((n - r) - (k - r))!) \
-    &= n!/(r! (k - r)! (n - k)!).
+    x = 8r - 3 = 4(2r - 1) + 1.
   $
+  If we set $s = 2 r - 1$, then we have $x = 4 s + 1$. $s$ is an integer since $r$ is an integer, and the products and differences of integers are integers. Thus, $x$ is an element of $B$. Since $x$ was an arbitrary element of $A$, we have shown that every element of $A$ is also an element of $B$, so $A subset.eq B$. $qed$
 
-  Since multiplication is commutative under $ZZ$, we have:
-  $
-    n!/(r! (n - k)! (k - r)!) = n!/(r! (k - r)! (n - k)!).
-  $
-  Thus, the LHS and RHS of the equation are equal, so $display(binom(n, k) dot binom(k, r) = binom(n, r) dot binom(n - r, k - r))$. $qed$
++ $B subset.eq.not A$. _Proof._
 
+  _Lemma: Parity Theorem for Even Integers._ If $x$ is even, then $x + 1$ is odd. \
+  _Proof._ If $x$ is even, then $x = 2k$ for some integer $k$. Then $x + 1 = 2k + 1$, so $x + 1$ is odd.
 
-#pagebreak()
+  For the sake of contradiction, suppose $B subset.eq A$. Then for all elements $x in B$, $x in A$.
 
-2. The binomial theorem states that for any numbers $a$ and $b$:
-  $
-    (a + b)^n = sum_(k = 0)^n binom(n, k) a^(n - k) b^k "for any integer" n >= 0.
-  $
-  Use this theorem to show that for any integer $n >= 0$:
-  $
-    sum_(k = 0)^n (-1)^k binom(n, k) 3^(n - k) 2^k = 1.
-  $
-#line(length: 100%, stroke: 0.5pt)
+  Suppose that $s$ is an even integer, which means $s$ is an integer. If we let $x = 4s + 1$, then $x in B$ by satisfying the predicate for $B$.
 
-_Proof._ By the binomial theorem, we have:
+  Since $x in B$, by the assumption that $B subset.eq A$, we have $x in A$. Thus, there exists some integer $r$ such that $x = 8r - 3$. Equating the expressions for $x$ in terms of $r$ and $s$, we have:
   $
-    (3 - 2)^n = sum_(k = 0)^n binom(n, k) 3^(n - k) (-2)^k.
-  $
-  Since $3 - 2 = 1$, we have:
-  $
-    1^n = sum_(k = 0)^n binom(n, k) 3^(n - k) (-2)^k.
-  $
-  Since $1^n = 1$ for all integers $n >= 0$, we have:
-  $
-    sum_(k = 0)^n binom(n, k) 3^(n - k) (-2)^k = 1.
-  $
-  Since $(-2)^k = (-1)^k dot 2^k$ for all integers $k >= 0$, we have:
-  $
-    sum_(k = 0)^n binom(n, k) 3^(n - k) (-1)^k dot 2^k = sum_(k = 0)^n (-1)^k binom(n, k) 3^(n - k) dot 2^k.
-  $
-  Thus, we have shown that:
-  $
-    sum_(k = 0)^n (-1)^k binom(n, k) 3^(n - k) 2^k = 1. #h(1em) qed
+    8r - 3 &= 4s + 1 \
+    8r &= 4s + 4 \
+    2r &= s + 1.
   $
 
-
-
-时间差 $ Delta t = (4 A Omega) / c^2 $
-将此时间差与光程差联系起来：$ Delta L = c Delta t = (4 A Omega) / c $
-又 $f = display(c / lambda)$，对于周长为 P 的激光腔，谐振频率是 $display(c / P)$ 的整数倍。由于光程变化 $Delta L$ 引起的频率变化 $Delta f$ 可近似为 $ |(Delta f) / f| approx |Delta L / P|. $
-代入 $Delta L$，得到 $ |Delta f| approx (f / P) times (4 A Omega / c) $
-
-又 $f approx display(c / lambda)$，有$ |Delta f| approx (c / (lambda P)) times (4 A Omega / c) = (4 A) / (lambda P) Omega. $
-这个拍频 $Delta f$ 就是环形激光陀螺中测量的量。记前面的系数 $display((4 A) / (lambda P) = S)$ 即为激光陀螺的标度因数。
-
-=== How to insert an image
-
-To insert an image here for html output, you need the experimental functions from `#html`: https://typst.app/blog/2025/typst-0.13/#a-first-look-at-html-export
-
-There are two ways to insert the same image:
-
-\
-
-
-Note: The file is converted into html format. For more details, refer to the setting in `astro.config.mts`.
-
-= Eigenproof
-
-Suppose a matrix $A$ has distinct eigenvalues $lambda_1, lambda_2, ..., lambda_n$.  \
-Let $bf(v)_i$ be an eigenvector for $lambda_i$, so $A bf(v)_i = lambda_i bf(v)_i$.
-
-Assume for the sake of contradiction that the set ${bf(v)_1, bf(v)_2, ..., bf(v)_n}$ is linearly dependent. Then, there exists some $bf(v)_j$ ($1 < j <= n$) such that $bf(v)_j$ can be written as a linear combination of its preceding eigenvectors:
-$
-  bf(v)_j &= c_1 bf(v)_1 + c_2 bf(v)_2 + ... + c_(j - 1) bf(v)_(j - 1)
-$
-Then:
-$
-  A bf(v)_j &= A(c_1 bf(v)_1 + c_2 bf(v)_2 + ... + c_(j - 1) bf(v)_(j - 1)) & #h(1em) "by left-multiplying both sides by" A \
-  A bf(v)_j &= c_1 A bf(v)_1 + c_2 A bf(v)_2 + ... + c_(j - 1) A bf(v)_(j - 1) & #h(1em) "by distributing" A "on the rhs" \
-  lambda_j bf(v)_j &= c_1 lambda_1 bf(v)_1 + c_2 lambda_2 bf(v)_2 + ... + c_(j - 1) lambda_(j - 1) bf(v)_(j - 1) #h(1em) & "by performing the substitution" A bf(v)_i = lambda_i bf(v)_i
-$
-Also:
-$
-  lambda_j bf(v)_j &= lambda_j (c_1 bf(v)_1 + c_2 bf(v)_2 + ... + c_(j - 1) bf(v)_(j - 1)) & #h(1em) "by multiplying both sides by" lambda_j \
-  lambda_j bf(v)_j &= c_1 lambda_j bf(v)_1 + c_2 lambda_j bf(v)_2 + ... + c_(j - 1) lambda_j bf(v)_(j - 1) #h(1em) & "by distributing" lambda_j "on the rhs" 
-$
-Finally, equate the two expressions for $lambda_j bf(v)_j$:
-$
-  c_1 lambda_1 bf(v)_1 + c_2 lambda_2 bf(v)_2 + ... + c_(j - 1) lambda_(j - 1) bf(v)_(j - 1) &= c_1 lambda_j bf(v)_1 + c_2 lambda_j bf(v)_2 + ... + c_(j - 1) lambda_j bf(v)_(j - 1)  \
-  c_1 (lambda_1 - lambda_j) bf(v)_1 + c_2 (lambda_2 - lambda_j) bf(v)_2 + ... + c_(j - 1) (lambda_(j - 1) - lambda_j) bf(v)_(j - 1) &= bf(0).
-$
-However, all $lambda_i$ are distinct, so $lambda_a - lambda_b != 0$ for $a != b$. Thus, the above equation can only be satisfied if $c_1 = c_2 = ... = c_(j - 1) = 0$, which contradicts our assumption that $bf(v)_j$ is a linear combination of its preceding eigenvectors. Therefore, the set ${bf(v)_1, bf(v)_2, ..., bf(v)_n}$ must be linearly independent. $qed$
+  Since $s + 1$ can be written as $2r$ for an integer $r$, $s + 1$ is an even integer by the definition of even integers. However, we assumed that $s$ is even. By the Parity Theorem for Even Integers, since $s$ is even, $s + 1$ must be odd.
+  
+  $s$ cannot be even and odd at the same time. This is a contradiction, so our assumption that $B subset.eq A$ must be false. Thus, $B subset.eq A$ is false. $qed$
