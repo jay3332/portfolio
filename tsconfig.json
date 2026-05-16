@@ -3,8 +3,14 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "typeRoots": ["./types", "./node_modules/@types"],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
     "strictNullChecks": true
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "./worker-configuration.d.ts"
+  ]
 }
