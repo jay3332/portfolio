@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const blogs = await getCollection("blog");
+---
+
+<Layout title="Jaysen Tsao: Blog">
+  {blogs.map(blog => (
+    <a href={`/blog/${blog.id}`} class="block p-4 rounded-lg hover:bg-white/5 transition-colors">
+      <h2 class="text-2xl font-semibold">{blog.data.title}</h2>
+      <p class="text-sm text-white/50 mt-1">{blog.data.brief}</p>
+    </a>
+  ))}
+</Layout>

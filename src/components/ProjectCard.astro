@@ -6,38 +6,54 @@ import ProjectSkills from "./ProjectSkills.astro";
 interface Props {
   slug?: string;
   project: any;
-  entry?: any;
 }
 
-const { slug, project, entry } = Astro.props;
+const { slug, project } = Astro.props;
 ---
-
 <a
-  id={`project__${project.slug}`}
-  href={`/projects/${project.slug}`}
+  id={`project__${project.id}`}
+  href={`/projects/${project.id}`}
   class:list={[
-    "flex gap-x-2 rounded-xl p-4 group transition-all box-border cursor-pointer",
-    slug === project.slug
+    "flex flex-col rounded-xl group transition-all box-border cursor-pointer overflow-hidden",
+    slug === project.id
       ? "current-card bg-gradient-to-br from-transparent to-gray-900"
       : "bg-gradient-to-br from-transparent to-transparent hover:to-white/20",
-    entry ? "max-w-[48ch]" : "mobile:w-full"
+    project ? "max-w-[48ch]" : "mobile:w-full"
   ]}
 >
-  {project.data.icon && <img src={project.data.icon} alt="" class="rounded-xl w-20 h-20 m-2">}
-  <div class="flex flex-col flex-grow my-1">
-    <div class="flex flex-wrap items-center justify-between">
-      <h2 class="transition underline-offset-2">
-        <span class="flex items-center">
-          {project.data.name}
-          <Icon name="arrow-right" class="opacity-30 group-hover:opacity-100 ml-1.5 group-hover:ml-2 transition-all" />
-        </span>
-      </h2>
-      <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
+  {!project && (
+    <div class="h-36 flex-shrink-0">
+      {project.data.thumbnail
+        ? <img src={project.data.thumbnail} alt="" loading="lazy" decoding="async" class="w-full h-full object-cover" />
+        : <div class="w-full h-full" style="background: linear-gradient(135deg, rgb(18 24 42), rgb(10 14 26))" />
+      }
     </div>
-    <p class="font-light text-sm text-white/80 mt-0.5 flex-grow">{project.data.description}</p>
-    <ProjectLinks data={project.data} />
-    <div class="flex flex-wrap gap-1 mt-3">
-      <ProjectSkills skills={project.data.skills} />
+  )}
+  <div class="flex gap-x-3 p-4">
+    {project.data.icon && (
+      <img
+        src={project.data.icon}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class:list={["rounded-xl flex-shrink-0", project ? "w-16 h-16 m-1" : "w-14 h-14 mt-0.5"]}
+      />
+    )}
+    <div class="flex flex-col flex-grow my-1">
+      <div class="flex flex-wrap items-center justify-between">
+        <h2 class="transition underline-offset-2">
+          <span class="flex items-center">
+            {project.data.name}
+            <Icon name="arrow-right" class="opacity-30 group-hover:opacity-100 ml-1.5 group-hover:ml-2 transition-all" />
+          </span>
+        </h2>
+        <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
+      </div>
+      <p class="font-light text-sm text-white/80 mt-0.5 flex-grow">{project.data.description}</p>
+      <ProjectLinks data={project.data} />
+      <div class="flex flex-wrap gap-1 mt-3">
+        <ProjectSkills skills={project.data.skills} />
+      </div>
     </div>
   </div>
 </a>

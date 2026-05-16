@@ -1,19 +1,27 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import ProjectCard from "../../components/ProjectCard.astro";
 import ProjectLinks from "../../components/ProjectLinks.astro";
 import { Icon } from 'astro-icon/components';
 import ProjectSkills from "../../components/ProjectSkills.astro";
 
-const allProjects = await getCollection('projects')
-const { project: slug } = Astro.params
+export const prerender = true;
 
-const entry = slug ? await getEntry('projects', slug) : null
+export async function getStaticPaths() {
+  const entries = await getCollection('projects')
+    .then(p => p.sort((a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity)));
+    
+  return entries.map(entry => ({
+    params: { project: entry.id }, 
+    props: { entry, allProjects: entries },
+  }));
+}
+
+const { entry, allProjects } = Astro.props;
 if (!entry)
-  return Astro.redirect('/404')
-
-const Content = await entry?.render().then(c => c.Content)
+  return Astro.redirect('/404');
+const { Content } = await render(entry);
 ---
 
 <Layout title="Jaysen Tsao: Projects">
@@ -21,13 +29,13 @@ const Content = await entry?.render().then(c => c.Content)
     <div class="tablet:hidden overflow-x-hidden overflow-y-auto p-2 h-full flex-grow flex flex-col items-end">
       <div class="flex flex-col gap-y-3">
         {allProjects.map(project => (
-          <ProjectCard project={project} slug={slug} entry={entry} />
+          <ProjectCard project={project} slug={entry.id} />
         ))}
       </div>
     </div>
     <div class="overflow-y-auto h-full py-4 w-[65ch] tablet:w-auto flex-grow tablet:flex tablet:justify-center">
       {Content && <div class="px-4 max-w-[65ch] tablet:max-w-full">
-        <h1 class="pt-4 mb-2 text-white/80 text-4xl font-bold" id={entry.slug}>{entry.data.name}</h1>
+        <h1 class="pt-4 mb-2 text-white/80 text-4xl font-bold" id={entry.id}>{entry.data.name}</h1>
         <div class="flex flex-wrap gap-2 pb-2">
           <ProjectSkills skills={entry.data.skills} />
         </div>
@@ -41,7 +49,7 @@ const Content = await entry?.render().then(c => c.Content)
             View More Projects
           </a>
           <div class="divider divider-horizontal" />
-          <a class="btn btn-ghost group" href=`#${entry.slug}`>
+          <a class="btn btn-ghost group" href={`#${entry.id}`}>
             <Icon name="arrow-right" class="-rotate-90 group-hover:-translate-y-1 transition-transform" />
             Back to Top
           </a>
@@ -51,9 +59,9 @@ const Content = await entry?.render().then(c => c.Content)
   </div>
 </Layout>
 
-<script define:vars={{ slug }}>
+<script define:vars={{ id: entry.id }}>
   document.addEventListener('astro:page-load', () => {
-    const currentCard = document.getElementById(`project__${slug}`)
+    const currentCard = document.getElementById(`project__${id}`)
     if (currentCard) {
       currentCard.scrollIntoView({ behavior: 'instant', block: 'center' })
     }

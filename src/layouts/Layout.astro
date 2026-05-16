@@ -1,7 +1,7 @@
 ---
 import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 export interface Props {
@@ -11,7 +11,7 @@ export interface Props {
 }
 
 const { title, navbar = 'show', showFooter = true } = Astro.props;
-const META_MESSAGE = "My personal portfolio";
+const META_MESSAGE = "A student developer, interested in full-stack software and embedded development. This portfolio showcases my projects and accomplishments.";
 const EXTERNAL_ICON = "https://github.com/jay3332/jay3332/blob/main/jay3332_circle.png?raw=true";
 const SITE_URL = "https://jay3332.pages.dev"
 ---
@@ -34,14 +34,25 @@ const SITE_URL = "https://jay3332.pages.dev"
     <meta property="og:title" content="Jaysen Tsao (jay3332)">
     <meta property="og:description" content={META_MESSAGE}>
     <meta property="og:image" content={EXTERNAL_ICON}>
+    <meta property="og:image:alt" content="jay3332 logo">
+    <meta property="og:site_name" content="Jaysen Tsao">
 
     <!-- Twitter -->
     <meta property="twitter:url" content={SITE_URL}>
     <meta property="twitter:title" content="Jaysen Tsao (jay3332)">
     <meta property="twitter:description" content={META_MESSAGE}>
     <meta property="twitter:image" content={EXTERNAL_ICON}>
+    <meta property="twitter:image:alt" content="jay3332 logo">
 
-    <ViewTransitions />
+    <!-- KaTeX -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+      integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+      crossorigin="anonymous"
+    />
+
+    <ClientRouter />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <title>{title}</title>

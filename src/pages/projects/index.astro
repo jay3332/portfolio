@@ -1,11 +1,493 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import ProjectSkills from "../../components/ProjectSkills.astro";
+import ProjectLinks from "../../components/ProjectLinks.astro";
+import { Icon } from "astro-icon/components";
+
+const FEATURED_ORDER = ["adapt", "ril", "terbium", "turbo-vue"] as const;
+
+const allProjects = await getCollection("projects")
+  .then(p => p.sort((a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity)));
+const projectMap = new Map(allProjects.map(p => [p.id, p]));
+const featuredProjects = FEATURED_ORDER.map(s => projectMap.get(s)).filter(Boolean);
+const otherProjects = allProjects.filter(
+  p => !FEATURED_ORDER.includes(p.id as (typeof FEATURED_ORDER)[number])
+);
+
+const ACCENT: Record<string, { rgb: string; dot: string }> = {
+  "adapt":     { rgb: "5,134,255",  dot: "#38bdf8" },
+  "ril":       { rgb: "249,115,22", dot: "#fbbf24" },
+  "terbium":   { rgb: "168,85,247", dot: "#c084fc" },
+  "turbo-vue": { rgb: "34,197,94",  dot: "#4ade80" },
+};
 ---
 
-<Layout title="All Projects">
-  <div class="flex items-center flex-col justify-center flex-grow">
-    <h1 class="font-title font-bold text-4xl">Project Catalog</h1>
-    <p class="mt-2 text-white/60 italic">Work in Progress — please view catalog directly for now!</p>
-    <a class="btn btn-outline btn-wide mt-4" href="/projects/all">Project Catalog</a>
-  </div>
+<Layout title="Projects">
+  <section class="relative overflow-hidden">
+    <div class="relative z-[1] mx-auto w-full max-w-[130ch] px-8 pt-12 pb-20">
+      <h1 class="hero-title mb-[0.6rem] text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.01em] text-white/90">
+        Personal Projects
+      </h1>
+      <p class="mb-6 max-w-[55ch] text-[0.95rem] leading-[1.65] text-white/50">
+        A few open-source software projects I've worked on over the past years.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#arc" class="btn btn-accent btn-sm">Featured</a>
+        <a href="/projects/all" class="btn btn-ghost btn-sm">Browse All</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="arc" class="relative mx-auto max-w-[130ch] overflow-x-clip px-8 pt-2 pb-24">
+    <div
+      id="tl-track"
+      class="absolute hidden lg:block top-12 bottom-12 w-[2px] rounded-[1px] bg-white/[0.07] left-1/2 -translate-x-1/2"
+      aria-hidden="true"
+    ></div>
+
+    {featuredProjects.map((project: any, i) => {
+      const ac = ACCENT[project.id] ?? { rgb: "59,130,246", dot: "#60a5fa" };
+      const flip = i % 2 === 1;
+      return (
+        <article
+          class:list={[
+            "arc-entry relative overflow-visible py-12 lg:py-[5.5rem]",
+            flip && "arc-entry--flip",
+          ]}
+          data-arc
+          data-dot={ac.dot}
+          data-rgb={ac.rgb}
+          data-timeline={project.data.timeline}
+          style={`--rgb:${ac.rgb};--dot:${ac.dot};`}
+        >
+          <div class="entry-halo" aria-hidden="true"></div>
+          <div class="entry-body relative z-[1] flex flex-col gap-6">
+            <div class="entry-text" data-slide={flip ? "right" : "left"}>
+              <div class="entry-text-head">
+                {project.data.icon && (
+                  <img
+                    src={project.data.icon}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class="entry-project-icon"
+                  />
+                )}
+                <h2 class="font-title entry-name">
+                  <a href={`/projects/${project.id}`} class="name-link group">
+                    {project.data.name}
+                    <Icon name="arrow-right" class="name-arrow" />
+                  </a>
+                </h2>
+              </div>
+              <time class="mb-2 block text-[0.65rem] font-bold uppercase tracking-[0.1em] text-white/40 lg:hidden">{project.data.timeline}</time>
+              <p class="entry-desc">{project.data.description}</p>
+              <div class="entry-skills-row">
+                <ProjectSkills skills={project.data.skills} />
+              </div>
+              <div class="entry-actions">
+                <a
+                  href={`/projects/${project.id}`}
+                  class="btn btn-sm btn-outline group border-white/20"
+                >
+                  View Project
+                  <Icon name="arrow-right" class="transition-transform group-hover:translate-x-0.5" />
+                </a>
+                <ProjectLinks data={project.data} />
+              </div>
+            </div>
+
+            <div class="entry-media" data-slide={flip ? "left" : "right"}>
+              <div class="relative">
+                {project.data.thumbnail
+                  ? (
+                    <img
+                      src={project.data.thumbnail}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      class="entry-img"
+                    />
+                  ) : (
+                    <div class="entry-img-empty"></div>
+                  )
+                }
+                <div class="media-glow" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </section>
+
+  <section class="rail-wrap mx-auto max-w-[130ch] px-8 pt-8 pb-20" data-reveal>
+    <header class="mb-5 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="mb-[0.2rem] text-[1.45rem] font-extrabold">More Projects</h2>
+      </div>
+      <a
+        href="/projects/all"
+        class="hidden whitespace-nowrap text-[0.85rem] font-semibold text-white/60 transition-colors hover:text-white sm:block"
+      >
+        View all <Icon name="arrow-right" class="ml-0.5 inline-block align-middle" />
+      </a>
+    </header>
+
+    <div
+      id="rail"
+      class="flex gap-[0.85rem] overflow-x-auto pb-3 [scroll-snap-type:x_mandatory] [-webkit-overflow-scrolling:touch]"
+    >
+      {otherProjects.map(project => (
+        <a
+          href={`/projects/${project.id}`}
+          class="group flex min-w-[21rem] max-w-[21rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-transparent p-0 text-inherit no-underline [scroll-snap-align:start] transition-[border-color,background] duration-200 hover:border-white/15 hover:bg-white/[0.06]"
+        >
+          <div class="relative h-[7.5rem] shrink-0">
+            {project.data.thumbnail
+              ? (
+                <img
+                  src={project.data.thumbnail}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  class="block h-full w-full object-cover"
+                />
+              ) : (
+                <div class="h-full w-full bg-gradient-to-br from-[#12182a] to-[#0a0e1a]" />
+              )
+            }
+          </div>
+          <div class="flex flex-1 flex-row items-start gap-3 p-[1.1rem_1.2rem]">
+            {project.data.icon && (
+              <img
+                src={project.data.icon}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="mt-[0.1rem] h-10 w-10 shrink-0 rounded-[0.6rem]"
+              />
+            )}
+            <div class="flex min-w-0 flex-1 flex-col">
+              <div class="mb-1 flex items-start justify-between gap-2">
+                <span class="text-[1.1rem] font-extrabold leading-[1.2]">
+                  {project.data.name}
+                </span>
+                <Icon
+                  name="arrow-right"
+                  class="shrink-0 text-white/35 transition-[transform,color] duration-200 group-hover:translate-x-[3px] group-hover:text-white"
+                />
+              </div>
+              <p class="mb-2 text-[0.65rem] text-white/45">
+                {project.data.timeline}
+              </p>
+              <p class="mb-3 flex-1 text-[0.9rem] leading-[1.55] text-white/75">
+                {project.data.description}
+              </p>
+              <div class="flex flex-wrap gap-[0.3rem]">
+                <ProjectSkills skills={project.data.skills} />
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-5 flex justify-center sm:hidden">
+      <a href="/projects/all" class="btn btn-outline btn-sm">View all projects</a>
+    </div>
+  </section>
 </Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const teardown = new AbortController();
+    const { signal } = teardown;
+    document.addEventListener("astro:before-swap", () => teardown.abort(), { once: true });
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const arcEntries = document.querySelectorAll("[data-arc]");
+    const revealEls = document.querySelectorAll("[data-reveal]");
+
+    if (reduced) {
+      arcEntries.forEach(el => el.classList.add("is-visible"));
+      revealEls.forEach(el => el.classList.add("is-visible"));
+      return;
+    }
+
+    const arcObs = new IntersectionObserver(
+      entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            arcObs.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -4% 0px" }
+    );
+
+    const revealObs = new IntersectionObserver(
+      entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            revealObs.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.18 }
+    );
+
+    arcEntries.forEach(el => arcObs.observe(el));
+    revealEls.forEach(el => revealObs.observe(el));
+
+    signal.addEventListener("abort", () => {
+      arcObs.disconnect();
+      revealObs.disconnect();
+    }, { once: true });
+  });
+</script>
+
+<style>
+  .hero-title {
+    font-family: var(--font-title, "Mona Sans", "Inter var", sans-serif);
+  }
+
+  .entry-halo {
+    position: absolute;
+    width: 30rem;
+    height: 22rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--rgb), 0.14), transparent 65%);
+    filter: blur(56px);
+    pointer-events: none;
+    z-index: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -4rem;
+    opacity: 0;
+    transition: opacity 1200ms ease;
+  }
+
+  .arc-entry--flip .entry-halo {
+    left: auto;
+    right: -4rem;
+  }
+
+  .arc-entry.is-visible .entry-halo {
+    opacity: 0.75;
+  }
+
+  .entry-text {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+
+  [data-slide="right"] {
+    transform: translateX(1.5rem);
+  }
+
+  .arc-entry.is-visible .entry-text {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .entry-name {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .name-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .name-link:hover { color: rgb(var(--rgb) / 1); }
+
+  .name-arrow {
+    font-size: 1.4rem;
+    color: rgb(255 255 255 / 0.35);
+    transition: transform 200ms ease, color 200ms ease;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .name-link:hover .name-arrow {
+    transform: translateX(4px);
+    color: rgb(var(--rgb) / 0.9);
+  }
+
+  .entry-desc {
+    color: rgb(255 255 255 / 0.75);
+    line-height: 1.65;
+    max-width: 52ch;
+    margin-bottom: 1.1rem;
+  }
+
+  .entry-skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .entry-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .entry-actions :global(div) {
+    margin-top: 0;
+  }
+
+  .entry-text-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .entry-project-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.875rem;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 0.45);
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .entry-media {
+    opacity: 0;
+    transform: translateX(1.5rem);
+    transition: opacity 600ms ease 120ms, transform 600ms ease 120ms;
+  }
+
+  .arc-entry.is-visible .entry-media {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .entry-media[data-slide="left"] {
+    transform: translateX(-1.5rem);
+  }
+
+  .entry-img {
+    width: 100%;
+    height: 14rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.4);
+    transform: rotate(-0.75deg);
+    transition: transform 350ms ease, box-shadow 350ms ease;
+  }
+
+  .arc-entry--flip .entry-img {
+    transform: rotate(0.75deg);
+  }
+
+  .entry-img:hover {
+    transform: rotate(0deg) scale(1.01);
+    box-shadow: 0 20px 48px rgb(0 0 0 / 0.5);
+  }
+
+  .entry-img-empty {
+    width: 100%;
+    height: 14rem;
+    border-radius: 1rem;
+    background:
+      radial-gradient(circle at 30% 35%, rgba(var(--rgb), 0.4), transparent 45%),
+      radial-gradient(circle at 72% 62%, rgb(168 85 247 / 0.2), transparent 45%),
+      linear-gradient(145deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01));
+    box-shadow: 0 20px 48px rgb(0 0 0 / 0.35);
+    transform: rotate(-1.5deg);
+  }
+
+  .media-glow {
+    position: absolute;
+    inset: 15% -6% -15% -6%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--rgb), 0.1), transparent 65%);
+    filter: blur(28px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  @media (min-width: 1024px) {
+    .entry-body {
+      display: grid;
+      grid-template-columns: 1fr 100px 1fr;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* text in col 1, media in col 3 */
+    .arc-entry:not(.arc-entry--flip) .entry-text {
+      grid-column: 1;
+      grid-row: 1;
+      padding-right: 2.5rem;
+    }
+    .arc-entry:not(.arc-entry--flip) .entry-media {
+      grid-column: 3;
+      grid-row: 1;
+      padding-left: 2.5rem;
+    }
+
+    /* media in col 1, text in col 3 */
+    .arc-entry--flip .entry-text {
+      grid-column: 3;
+      grid-row: 1;
+      padding-left: 2.5rem;
+    }
+    .arc-entry--flip .entry-media {
+      grid-column: 1;
+      grid-row: 1;
+      padding-right: 2.5rem;
+    }
+
+    .entry-img,
+    .entry-img-empty {
+      height: 16rem;
+    }
+
+    .arc-entry--flip .entry-halo {
+      right: -4rem;
+      left: auto;
+    }
+  }
+
+  .rail-wrap {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+
+  .rail-wrap.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .rail-cta {
+    border-style: dashed;
+    border-color: rgb(94 234 212 / 0.35);
+    background: linear-gradient(145deg, rgb(34 197 94 / 0.08), rgb(59 130 246 / 0.1));
+    padding: 1.5rem 1.2rem;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .rail-cta:hover {
+    border-color: rgb(94 234 212 / 0.6);
+    background: linear-gradient(145deg, rgb(34 197 94 / 0.13), rgb(59 130 246 / 0.15));
+  }
+</style>
