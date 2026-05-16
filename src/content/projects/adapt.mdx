@@ -24,80 +24,29 @@ order: 0
 ---
 
 <div class="md:text-center italic">
-  Discord works. But it doesn't have to be the only option.
+  A versatile social platform tailoring towards privacy, flexibility, performance, and customizability.
 </div>
 
-## Background
+## Motivation
 
-Platforms like Discord have become central to how people communicate online—but they come with real trade-offs:
-closed source, limited customizability, and growing privacy concerns. I wanted to explore what a chat platform
-could look like if **openness, performance, and user control** were first-class design goals rather than afterthoughts.
+This initially started as a continuation of [FerrisChat](https://github.com/ferrischat),
+which (after a rewrite) evolved into a completely independent codebase and project.
 
-Adapt started as a personal experiment and grew into a full-stack social platform with real-time messaging,
-voice communication, and both a web client and a native desktop app.
+FerrisChat was the first OSS project I contributed to consistently, so it made sense
+to continue building on that foundation.
 
-## Architecture
+## Infrastructure
 
-Adapt is structured as a collection of independently deployed services, all written in Rust on the backend.
-
-### REST API & WebSocket Gateway
-
-The REST API is built with [axum](https://github.com/tokio-rs/axum) and handles authentication, guild
-management, channel operations, and user data. Authentication is JWT-based with refresh token rotation.
-
-Real-time events (messages, typing indicators, presence updates) flow through a separate WebSocket gateway
-built with [tokio-tungstenite](https://github.com/snapview/tokio-tungstenite). To scale horizontally, the
-gateway nodes communicate through a **[RabbitMQ](https://www.rabbitmq.com) message broker**: when an event
-is emitted (e.g., a message send), the REST API publishes it to a shared topic exchange, and every gateway
-node that has a relevant subscriber forwards it to connected clients. This decouples event routing from any
-single node.
-
-### Media & CDN
-
-User-uploaded content is processed through a custom CDN service. Images are validated, stripped of
-unnecessary metadata, and tagged with dimensions and format information using
-[RIL](/projects/ril)—my own Rust imaging library—before being persisted. The CDN also handles on-the-fly
-thumbnail generation for large uploads.
-
-A separate **media proxy** service re-serves external image URLs through Adapt's own domain, preventing
-third-party servers from logging users' IP addresses when embedded images are loaded.
+### Rust Backend
+- REST services (public API, content delivery network, and media proxy) written using axum
+- CDN tags images with metadata processed using RIL (see "Projects/RIL")
+- WebSocket written using tokio-tungstenite and communicates using RabbitMQ message broker
+- Voice server based on WebRTC protocol
 
 ### Data Storage
+- Durable models such user accounts stored using PostgreSQL, cached using Redis
+- Ephemeral models such as message acknowledgements and user mentions are stored on Redis
 
-Storage is split by access pattern and durability requirements:
-
-- **PostgreSQL** — normalized, durable storage for accounts, guilds, channels, messages, and roles.
-- **Redis** — dual-purpose: a fast read-through cache in front of PostgreSQL, and the primary store
-  for ephemeral data (session tokens, rate limit counters, message read receipts).
-
-### Frontend & Desktop
-
-The client is written in [Solid.js](https://solidjs.com) with Tailwind CSS, and is served both as a
-**Progressive Web App** (PWA) for installability on mobile and as a native desktop application via
-[Tauri](https://tauri.app). Because Tauri wraps a WebView rather than bundling Chromium, the desktop
-app ships at a fraction of the size of an Electron equivalent—while sharing 100% of the UI code.
-
-![Adapt](/images/adapt/thumbnail.png)
-
-## Notable Components
-
-### Voice Communication (WebRTC)
-
-Voice channels are powered by a dedicated voice server implementing the
-**[WebRTC](https://webrtc.org)** protocol. WebRTC handles NAT traversal, codec negotiation, and
-peer-to-peer media routing natively, which avoids the overhead of proxying audio through a central
-server for most connections.
-
-### Scalable Event Fanout
-
-The RabbitMQ fanout pattern is one of the more interesting architectural decisions in Adapt. Rather
-than maintaining a global in-memory list of connected sockets, each gateway node independently
-manages its own subscriber map. When a message is published to RabbitMQ, the broker delivers it to
-all subscribed nodes simultaneously—making it straightforward to add new gateway nodes without any
-coordination overhead.
-
-### RIL Integration
-
-One benefit of building the CDN in Rust is the ability to link directly against [RIL](/projects/ril)
-for image processing, avoiding any IPC overhead. Format validation, thumbnail generation, and metadata
-tagging all happen synchronously within the same process, keeping the upload pipeline simple and fast.
+### Front-end
+- Web-based client served at https://app.adapt.chat, written using Solid.js, Tailwind CSS, and Tauri
+- Landing and onboarding webpage served at https://adapt.chat, written using Astro and Tailwind CSS

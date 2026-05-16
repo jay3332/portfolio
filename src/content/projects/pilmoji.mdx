@@ -17,94 +17,15 @@ order: 200
 ---
 
 <div class="md:text-center italic">
-  PIL renders emoji as boxes. Pilmoji doesn't.
+  Emoji support for Pillow, the Python Imaging Library.
 </div>
 
-## Background
+Adds emoji rendering support for PIL/Pillow, the popular Python imaging library. 
+Focuses on simplicity and configurability.
 
-[Pillow](https://python-pillow.org) (PIL) is the go-to image processing library for Python, and it's
-excellent at most things—but it has one glaring limitation: **emoji don't render**. If you draw a
-string containing 🎉 or 👋 with Pillow's `ImageDraw.text()`, you'll get a blank box or a missing
-glyph, because standard fonts don't include the full emoji set.
+## Features
 
-This matters a lot for bots and applications that generate images from user-provided text. While
-building [Coined](/projects/coined), I kept running into this wall. Most workarounds were fragile
-or required heavy dependencies. Pilmoji is the clean solution I wished existed.
-
-## What Pilmoji Does
-
-Pilmoji is a **drop-in augmentation for Pillow's text rendering** that transparently handles emoji.
-When you draw text, Pilmoji:
-
-1. Scans the string for emoji codepoints.
-2. Downloads (or retrieves from cache) the corresponding emoji images from a configurable source.
-3. Composites the emoji images into the text at the correct size and baseline, interleaved with
-   the regular text rendered by Pillow.
-
-The result is correctly rendered emoji, sized and positioned to match the surrounding text, with no
-manual layout work required.
-
-## Usage
-
-```python
-from PIL import Image
-from pilmoji import Pilmoji
-
-with Image.new("RGB", (600, 80), (255, 255, 255)) as image:
-    with Pilmoji(image) as renderer:
-        renderer.text((10, 10), "Hello, world! 👋", font=my_font)
-
-    image.save("output.png")
-```
-
-The `Pilmoji` context manager wraps a Pillow `Image` and exposes a `text()` method with the same
-signature as `ImageDraw.text()`, making it easy to adopt in existing code.
-
-## Emoji Sources
-
-Different applications need different emoji styles. Pilmoji supports multiple configurable sources:
-
-| Source          | Description                          |
-|-----------------|--------------------------------------|
-| `Twemoji`       | Twitter's emoji set (default)        |
-| `EmojiCDN`      | High-quality CDN-hosted emoji        |
-| `MicrosoftEmoji`| Microsoft's Fluent emoji style       |
-| `AppleEmoji`    | Apple's emoji style                  |
-| Custom          | Implement `BaseSource` for any CDN   |
-
-Switching sources is one line:
-
-```python
-from pilmoji.source import MicrosoftEmojiSource
-
-with Pilmoji(image, source=MicrosoftEmojiSource()) as renderer:
-    renderer.text((10, 10), "Hello 🌍", font=my_font)
-```
-
-## Discord Emoji Support
-
-Pilmoji can also render **custom Discord emoji** in the `:name:` format, fetching the image from
-Discord's CDN. This is particularly useful for Discord bot image generation, where user messages
-often contain server-specific emoji.
-
-## Fine Tuning
-
-Emoji sizing and vertical alignment are configurable when the defaults don't quite fit your font:
-
-```python
-renderer.text(
-    (10, 10),
-    "Hello 🎉",
-    font=my_font,
-    emoji_scale_factor=1.2,      # scale emoji relative to font size
-    emoji_position_offset=(0, 2) # nudge emoji vertically
-)
-```
-
-## Caching
-
-By default, Pilmoji caches downloaded emoji images in memory for the lifetime of the renderer.
-For applications generating many images, a persistent disk cache can be configured to avoid
-re-downloading the same emoji repeatedly.
-
-![Pilmoji](/images/pilmoji/thumbnail.png)
+- Support for all Unicode emojis and Discord emojis out of the box
+- Optionally cache rendered emojis for faster performance.
+- Support for custom emoji sources.
+- Precise emoji sizing and alignment.
