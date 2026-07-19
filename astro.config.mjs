@@ -57,5 +57,5 @@ export default defineConfig({
   // adapter: cloudflare(),
   markdown: mdxConfig,
 
-  adapter: cloudflare(),
+  // adapter: cloudflare(),
 });
