@@ -1,6 +1,6 @@
 #import "../root.typ": *
 
-#show: blog-post.with(title: "typst test 1", date: "2026-05-10")
+#show: web-compatible.with(title: "typst test 1", date: "2026-05-10")
 
 #title[Examples]
 

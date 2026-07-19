@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/mathfonts.css';
+import '../../styles/typst.css';
 
 export const prerender = true;
 
@@ -21,127 +22,10 @@ const { Content } = await render(entry);
 
 <Layout title={entry.data.title}>
   <div class="flex flex-col items-center py-8 flex-grow w-full px-4">
-    <h1>{entry.data.title}</h1>
     <article class="prose lg:prose-lg prose-invert md:max-w-[76ch] max-w-full htmlmathparagraph font-serif mt-10 [&>*>img]:!rounded-2xl">
+      <h1 class="text-3xl font-title font-extrabold text-left w-full">{entry.data.title}</h1>
+      <p class="text-sm text-gray-400 mb-8 -mt-4">{entry.data.date?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
       <Content />
     </article>
   </div>
 </Layout>
-
-<style is:inline>
-  .typst-frame .typst-text * {
-    fill: currentColor;
-  }
-
-  .typst-frame .typst-shape {
-    stroke: currentColor;
-  }
-
-  hr.lthin {
-    margin-top: 1.5em !important;
-    margin-bottom: 1.5em !important;
-  }
-
-  .infocard {
-    padding: 0.75em 1.25em;
-    border-radius: 0.75em;
-    margin: 0.5em 0 !important;
-  }
-  
-  .infocard-heading, .infocard h4, .infocard h5 {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-  }
-
-  .infocard p:first-child, .infocard li:first-child {
-    margin-top: 0;
-  }
-
-  .infocard p:last-child, .infocard li:last-child {
-    margin-bottom: 0;
-  }
-
-  .infocard p, .infocard ul, .infocard ol {
-    margin: 0.3em 0;
-  }
-
-  .infocard li {
-    margin: 0.25em 0;
-  }
-
-  .infocard-definition { 
-    --card-color: 0 128 0;
-    background-color: rgb(var(--card-color) / 0.2); 
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  .infocard-theorem, .infocard-proposition, .infocard-lemma, .infocard-corollary { 
-    --card-color: 128 0 128;
-    background-color: rgb(var(--card-color) / 0.2); 
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  .infocard-property { 
-    --card-color: 128 107 0;
-    background-color: rgb(var(--card-color) / 0.2); 
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  .infocard-notation { 
-    --card-color: 0 128 128;
-    background-color: rgb(var(--card-color) / 0.2); 
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  .infocard-important { 
-    --card-color: 128 67 0;
-    background-color: rgb(var(--card-color) / 0.2);
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  .infocard-algorithm {
-    --card-color: 0 0 128;
-    background-color: rgb(var(--card-color) / 0.2);
-    border: 1px solid rgb(var(--card-color) / 0.5);
-  }
-  
-  .hanging-body {
-    padding-left: 1.33em !important;
-  }
-
-  span[role="math"], .mathyml-inline-span {
-    display: inline-block;
-  }
-
-  .mathyml-block-center {
-    text-align: center;
-  }
-  .mathyml-align-right {
-    text-align: right;
-    padding-left: 0em;
-    padding-right: 0em;
-  }
-
-  .mathyml-align-left {
-    text-align: left;
-    padding-left: 0em;
-    padding-right: 0em;
-  }
-
-  @media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
-    .mathyml-align-right {
-      text-align: -webkit-right;
-      padding-left: 0em;
-      padding-right: 0em;
-    }
-
-    .mathyml-align-left {
-      text-align: -webkit-left;
-      padding-left: 0em;
-      padding-right: 0em;
-    }
-  }
-
-  @media screen and (max-width: 640px) {
-    math[display="block"] {
-      /* transform: scale(0.95) !important; */
-      overflow-x: auto;
-    }
-  }
-</style>

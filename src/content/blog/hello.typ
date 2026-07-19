@@ -1,6 +1,6 @@
 #import "../root.typ": *
 
-#show: blog-post.with(title: "Test Blog", date: "2026-05-09")
+#show: web-compatible.with(title: "Test Blog", date: "2026-05-09")
 
 = Hi this is test blog
 

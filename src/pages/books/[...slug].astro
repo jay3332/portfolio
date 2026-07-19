@@ -1,0 +1,290 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/mathfonts.css';
+import '../../styles/typst.css';
+import { Icon } from 'astro-icon/components';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const entries = await getCollection('book');
+
+  const paths = [];
+
+  // Section reader pages: /books/linear-algebra/ch1/1-vector-spaces
+  for (const entry of entries) {
+    // entry.id = "linear-algebra/ch1/1-vector-spaces"
+    paths.push({ params: { slug: entry.id }, props: { view: 'section', entry } });
+  }
+
+  // Book overview pages: /books/linear-algebra
+  const books = new Map<string, typeof entries[0]>();
+  for (const entry of entries) {
+    if (!books.has(entry.data.bookSlug)) books.set(entry.data.bookSlug, entry);
+  }
+  for (const [bookSlug, entry] of books) {
+    paths.push({ params: { slug: bookSlug }, props: { view: 'book', entry } });
+  }
+
+  return paths;
+}
+
+const { view, entry } = Astro.props;
+const { data } = entry;
+
+const { bookTitle, bookSlug, bookAuthor, bookDescription, bookChapters,
+        chapterIndex, sectionIndex, title, headings } = data;
+console.log(data);
+
+// For section view, render the typst HTML
+let Content: any = null;
+if (view === 'section') {
+  ({ Content } = await render(entry));
+}
+
+const firstSection = bookChapters[0]?.sections[0];
+const currentSlug = view === 'section' ? entry.id : null;
+---
+
+<Layout title={view === 'section' ? `${title} — ${bookTitle}` : bookTitle}>
+  {view === 'book' ? (
+    <div class="flex flex-col items-center py-4 md:py-16 flex-grow w-full px-4">
+      <div class="w-full max-w-3xl">
+        <h1 class="text-4xl font-bold mt-4 mb-1">{bookTitle}</h1>
+        {/* <p class="text-gray-400 mb-2">{bookAuthor}</p> */}
+        <p class="text-gray-300 mb-8">{bookDescription}</p>
+        {/* {firstSection && (
+          <a
+            href={`/books/${firstSection.slug}`}
+            class="inline-block bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl px-6 py-3 transition-colors mb-12"
+          >
+            Start Reading →
+          </a>
+        )} */}
+        <div class="flex flex-col gap-6">
+          {bookChapters.map((ch, ci) => (
+            <div>
+              <h2 class="text-lg font-semibold mb-1">Chapter {ci + 1}: {ch.title}</h2>
+              {ch.description && <p class="text-sm text-gray-400 mb-4">{ch.description}</p>}
+              <ul class="flex flex-col -mx-3">
+                {ch.sections.map((sec, si) => (
+                  <li>
+                    <a
+                      href={`/books/${sec.slug}`}
+                      class="flex items-center gap-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg px-3 py-2 transition-colors"
+                    >
+                      <span class="text-white/50 w-4 shrink-0">{ci + 1}.{si + 1}</span>
+                      {sec.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ) : (
+    <!-- Section reader page -->
+    <div class="book-reader flex flex-col flex-grow">
+
+      <!-- Mobile nav bar -->
+      <div class="book-mobile-nav xl:hidden sticky top-0 z-20 bg-black/95 border-b border-white/10 backdrop-blur px-4 py-3 flex items-center gap-3">
+        <a href={`/books/${bookSlug}`} class="text-gray-400 hover:text-white text-sm shrink-0">{bookTitle}</a>
+        <span class="text-gray-600">›</span>
+        <div class="flex gap-2 flex-1 min-w-0">
+          <select
+            id="mobile-chapter-select"
+            class="bg-black/80 border border-white/20 text-white text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
+          >
+            {bookChapters.map((ch, ci) => (
+              <option value={ci} selected={ci === chapterIndex}>
+                Ch {ci + 1}: {ch.title}
+              </option>
+            ))}
+          </select>
+          <select
+            id="mobile-section-select"
+            class="bg-black/80 border border-white/20 text-white text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
+          >
+            {bookChapters[chapterIndex].sections.map((sec, si) => (
+              <option value={sec.slug} selected={si === sectionIndex}>
+                {chapterIndex + 1}.{si + 1} {sec.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <!-- Mobile TOC toggle -->
+        <button
+          id="mobile-toc-toggle"
+          class="shrink-0 text-gray-400 hover:text-white text-xs border border-white/20 rounded-lg px-2 py-1.5"
+          aria-label="Table of contents"
+        >
+          TOC
+        </button>
+      </div>
+
+      <!-- Mobile TOC drawer -->
+      <div
+        id="mobile-toc-drawer"
+        class="xl:hidden hidden fixed inset-x-0 top-[calc(var(--navbar-h,48px)+48px)] z-10 bg-black/95 border-b border-white/10 px-4 py-4 max-h-64 overflow-y-auto"
+      >
+        <p class="text-xs text-gray-500 uppercase tracking-wider mb-2">On this page</p>
+        <nav>
+          {headings.map(h => (
+            <a
+              href={`#${h.id}`}
+              class:list={[
+                'block text-sm py-1 hover:text-white transition-colors truncate',
+                h.level === 1 ? 'text-gray-300 pl-0' : 'text-gray-500 pl-3',
+              ]}
+            >
+              {h.text}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- Three-column layout -->
+      <div class="book-layout flex flex-grow">
+
+        <!-- Left sidebar: chapter/section nav -->
+        <nav class="book-nav hidden xl:flex flex-col w-60 shrink-0 border-r border-white/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-3">
+          <a href={`/books/${bookSlug}`} class="text-xs text-gray-500 hover:text-gray-300 transition-colors px-2 mb-4 block truncate">
+            ← {bookTitle}
+          </a>
+          {bookChapters.map((ch, ci) => (
+            <div class="mb-4">
+              <p class="text-xs text-gray-500 px-2 mb-1 truncate">
+                {ci + 1} {ch.title}
+              </p>
+              <ul>
+                {ch.sections.map((sec, si) => {
+                  const active = sec.slug === currentSlug;
+                  return (
+                    <li>
+                      <a
+                        href={`/books/${sec.slug}`}
+                        class:list={[
+                          'flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 transition-colors truncate',
+                          active
+                            ? 'bg-white/10 text-white font-medium'
+                            : 'text-gray-400 hover:text-white hover:bg-white/5',
+                        ]}
+                        aria-current={active ? 'page' : undefined}
+                      >
+                        <span class="text-gray-600 font-mono text-xs w-7 shrink-0">{ci + 1}.{si + 1}</span>
+                        <span class="truncate">{sec.title}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        <!-- Main content -->
+        <main class="book-content flex-1 min-w-0 py-10 px-6 xl:px-12 max-w-4xl mx-auto">
+          <!-- Prev / Next navigation -->
+          {(() => {
+            const allSections = bookChapters.flatMap(ch => ch.sections);
+            const idx = allSections.findIndex(s => s.slug === currentSlug);
+            const prev = idx > 0 ? allSections[idx - 1] : null;
+            const next = idx < allSections.length - 1 ? allSections[idx + 1] : null;
+            return (
+              <div class="flex justify-between text-sm text-gray-500 mb-8">
+                {prev
+                  ? <a href={`/books/${prev.slug}`} class="hover:text-white transition-colors">← {prev.title}</a>
+                  : <span />}
+                {next
+                  ? <a href={`/books/${next.slug}`} class="hover:text-white transition-colors">{next.title} →</a>
+                  : <span />}
+              </div>
+            );
+          })()}
+
+          <article class="prose lg:prose-lg prose-invert max-w-full htmlmathparagraph font-serif [&>*>img]:!rounded-2xl">
+            {Content && <Content />}
+          </article>
+
+          <!-- Bottom prev/next -->
+          {(() => {
+            const allSections = bookChapters.flatMap(ch => ch.sections);
+            const idx = allSections.findIndex(s => s.slug === currentSlug);
+            const prev = idx > 0 ? allSections[idx - 1] : null;
+            const next = idx < allSections.length - 1 ? allSections[idx + 1] : null;
+            return (
+              <div class="flex justify-between text-sm text-gray-500 mt-12 pt-6 border-t border-white/10">
+                {prev
+                  ? <a href={`/books/${prev.slug}`} class="hover:text-white transition-colors">← {prev.title}</a>
+                  : <span />}
+                {next
+                  ? <a href={`/books/${next.slug}`} class="hover:text-white transition-colors">{next.title} →</a>
+                  : <span />}
+              </div>
+            );
+          })()}
+        </main>
+
+        <!-- Right sidebar: TOC -->
+        <aside class="book-toc hidden xl:flex flex-col w-52 shrink-0 border-l border-white/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-3">On this page</p>
+          <nav class="flex flex-col gap-0.5">
+            {headings.map(h => (
+              <a
+                href={`#${h.id}`}
+                class:list={[
+                  'text-xs py-1 hover:text-white transition-colors leading-snug',
+                  h.level === 1 ? 'text-gray-400 pl-0' : 'text-gray-600 pl-3',
+                ]}
+              >
+                {h.text}
+              </a>
+            ))}
+            {headings.length === 0 && (
+              <span class="text-xs text-gray-600 italic">No headings</span>
+            )}
+          </nav>
+        </aside>
+      </div>
+    </div>
+  )}
+</Layout>
+
+<script>
+  // Highlight active TOC entry on scroll
+  const tocLinks = document.querySelectorAll('.book-toc a[href^="#"]');
+  if (tocLinks.length) {
+    const headingEls = Array.from(tocLinks).map(a => {
+      const id = (a.getAttribute('href') ?? '').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean) as HTMLElement[];
+
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(a => {
+            const active = a.getAttribute('href') === `#${id}`;
+            a.classList.toggle('!text-white', active);
+          });
+          break;
+        }
+      }
+    }, { rootMargin: '-10% 0px -80% 0px' });
+
+    headingEls.forEach(el => observer.observe(el));
+  }
+</script>
+
+<style is:inline>
+  .book-section-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    margin-top: 0;
+  }
+</style>

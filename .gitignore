@@ -41,3 +41,6 @@ dist/
 .astro/*
 .wrangler/*
 .claude/*
+
+# generated typst pdf output
+src/content/books/**/*.pdf

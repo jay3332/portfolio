@@ -2,6 +2,7 @@ import { z } from 'astro/zod';
 import { defineCollection } from "astro:content";
 import { glob } from 'astro/loaders';
 import { typstLoader } from './lib/typst-loader';
+import { bookLoader } from './lib/book-loader';
 
 export const projectsSchema = z.object({
   name: z.string(),
@@ -41,16 +42,47 @@ const blogCollection = defineCollection({
   schema: blogSchema,
 });
 
-export const bookPageSchema = z.object({
-  title: z.string(),
-  date: z.coerce.date().optional(),
-  tags: z.array(z.string()).default([]),
-  brief: z.string().optional(),
-  thumbnail: z.string().optional(),
+const bookHeadingSchema = z.object({
+  level: z.number(),
+  text: z.string(),
+  id: z.string(),
 });
 
+const bookSectionNavSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+});
+
+const bookChapterNavSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  sections: z.array(bookSectionNavSchema),
+});
+
+export const bookPageSchema = z.object({
+  bookTitle: z.string(),
+  bookSlug: z.string(),
+  bookAuthor: z.string(),
+  bookDescription: z.string(),
+  chapterIndex: z.number(),
+  chapterTitle: z.string(),
+  sectionIndex: z.number(),
+  title: z.string(),
+  headings: z.array(bookHeadingSchema),
+  bookChapters: z.array(bookChapterNavSchema),
+  bookTerm: z.string().optional(),
+  bookCourse: z.string().optional(),
+});
+
+const fontArgs = [{
+  fontPaths: [
+    'public/fonts/ibm-plex-serif/fonts/complete',
+    'public/fonts/ibm-plex-math/fonts/complete',
+  ], 
+}];
+
 const bookPagesCollection = defineCollection({
-  loader: glob({ pattern: "**/*", base: "./src/content/books" }),
+  loader: bookLoader({ fontArgs }),
   schema: bookPageSchema,
 });
 

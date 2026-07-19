@@ -1,0 +1,104 @@
+/* Typst frame fixes */
+.typst-frame .typst-text * { fill: currentColor; }
+.typst-frame .typst-shape { stroke: currentColor; }
+
+hr.lthin {
+  margin-top: 1.5em !important;
+  margin-bottom: 1.5em !important;
+}
+
+/* Info cards */
+.infocard {
+  padding: 0.75em 1.25em;
+  border-radius: 0.75em;
+  margin: 0.5em 0 !important;
+}
+.infocard-heading, .infocard h4, .infocard h5 {
+  margin-top: 0; margin-bottom: 0; padding: 0;
+  display: inline-block;
+}
+.infocard-heading span {
+  display: inline-block;
+}
+.infocard p:first-child, .infocard li:first-child { margin-top: 0; }
+.infocard p:last-child, .infocard li:last-child { margin-bottom: 0; }
+.infocard p, .infocard ul, .infocard ol { margin: 0.3em 0; }
+.infocard li { margin: 0.25em 0; }
+
+.infocard-definition {
+  --card-color: 0 128 0;
+  background-color: rgb(var(--card-color) / 0.2);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-theorem, .infocard-proposition, .infocard-lemma, .infocard-corollary {
+  --card-color: 128 0 128;
+  background-color: rgb(var(--card-color) / 0.2);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-property {
+  --card-color: 128 107 0;
+  background-color: rgb(var(--card-color) / 0.2);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-notation, .infocard-terminology {
+  --card-color: 0 128 128;
+  background-color: rgb(var(--card-color) / 0.2);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-important {
+  --card-color: 130 81 223;
+  background-color: rgb(var(--card-color) / 0.15);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-algorithm, .infocard-resource {
+  --card-color: 0 0 200;
+  background-color: rgb(var(--card-color) / 0.2);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+.infocard-remark, .infocard-note {
+  --card-color: 0 128 128;
+  background-color: rgb(var(--card-color) / 0.15);
+  border: 1px solid rgb(var(--card-color) / 0.4);
+}
+.infocard-warning, .infocard-caution {
+  --card-color: 180 80 0;
+  background-color: rgb(var(--card-color) / 0.15);
+  border: 1px solid rgb(var(--card-color) / 0.5);
+}
+
+/* Hanging blocks (proof, example, solution) */
+.hanging-body { padding-left: 1.33em !important; }
+
+/* Math */
+span[role="math"], .mathyml-inline-span { display: inline-block; }
+.mathyml-block-center { text-align: center; }
+.mathyml-align-right { text-align: right; }
+.mathyml-align-left  { text-align: left; }
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+  .mathyml-align-right { text-align: -webkit-right; }
+  .mathyml-align-left  { text-align: -webkit-left; }
+}
+@media screen and (max-width: 640px) {
+  math[display="block"] { overflow-x: auto; }
+}
+
+.typst-pilcrow {
+  display: inline-block;
+  margin-left: 0.67em;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+h1:hover .typst-pilcrow,
+h2:hover .typst-pilcrow,
+h3:hover .typst-pilcrow,
+h4:hover .typst-pilcrow,
+h5:hover .typst-pilcrow,
+h6:hover .typst-pilcrow {
+  opacity: 1;
+}
+
+h3:hover .typst-pilcrow {
+  opacity: 1 !important;
+}

@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = true;
+
+const entries = await getCollection('book');
+
+const books = new Map<string, { title: string; author: string; description: string; slug: string; chapterCount: number; sectionCount: number }>();
+for (const entry of entries) {
+  const { bookSlug, bookTitle, bookAuthor, bookDescription, bookChapters } = entry.data;
+  if (!books.has(bookSlug)) {
+    books.set(bookSlug, {
+      title: bookTitle,
+      author: bookAuthor,
+      description: bookDescription,
+      slug: bookSlug,
+      chapterCount: bookChapters.length,
+      sectionCount: bookChapters.reduce((n, ch) => n + ch.sections.length, 0),
+    });
+  }
+}
+const bookList = [...books.values()];
+---
+
+<Layout title="Books">
+  <div class="flex flex-col items-center py-16 flex-grow w-full px-4">
+    <h1 class="text-4xl font-black mb-2 font-title">Books, Notes, and Resources</h1>
+    <p class="text-gray-400 mb-12">A collection of notes and resources I've written during my time in university.</p>
+    <div class="w-full max-w-3xl flex flex-col gap-6">
+      {bookList.map(book => (
+        <a
+          href={`/books/${book.slug}`}
+          class="group block rounded-2xl border-[2px] border-white/10 hover:border-white/20 hover:bg-white/10 transition-all p-7"
+        >
+          <h2 class="text-2xl font-bold mb-1 font-title">{book.title}</h2>
+          {/* <p class="text-sm text-gray-400 mb-3">{book.author}</p> */}
+          <p class="text-gray-300 mb-4">{book.description}</p>
+          <div class="flex gap-x-1 text-xs text-gray-500">
+            <span>{book.chapterCount} Chapter{book.chapterCount !== 1 ? 's' : ''}</span>
+            <span>•</span>
+            <span>{book.sectionCount} Section{book.sectionCount !== 1 ? 's' : ''}</span>
+          </div>
+        </a>
+      ))}
+      {bookList.length === 0 && (
+        <p class="text-gray-500 text-center">No books yet.</p>
+      )}
+    </div>
+  </div>
+</Layout>
