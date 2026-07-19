@@ -7,7 +7,10 @@ import '../../styles/typst.css';
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const entries = await getCollection('blog');
+  const entries = [
+    ...await getCollection('blog'),
+    ...await getCollection('blogMdx'),
+  ];
   return entries
     .sort((a, b) => (b.data.date ?? new Date()).getTime() - (a.data.date ?? new Date()).getTime())
     .map(entry => ({ params: { slug: entry.id }, props: { entry } }));

@@ -42,6 +42,11 @@ const blogCollection = defineCollection({
   schema: blogSchema,
 });
 
+const blogMdxCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  schema: blogSchema,
+});
+
 const bookHeadingSchema = z.object({
   level: z.number(),
   text: z.string(),
@@ -89,5 +94,6 @@ const bookPagesCollection = defineCollection({
 export const collections = {
   projects: projectsCollection,
   blog: blogCollection,
+  blogMdx: blogMdxCollection,
   book: bookPagesCollection,
 }

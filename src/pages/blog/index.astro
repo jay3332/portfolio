@@ -2,7 +2,10 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const blogs = await getCollection("blog");
+const blogs = [
+  ...await getCollection("blog"),
+  ...await getCollection("blogMdx"),
+].sort((a, b) => (b.data.date ?? new Date()).getTime() - (a.data.date ?? new Date()).getTime());
 ---
 
 <Layout title="Jaysen Tsao: Blog">
