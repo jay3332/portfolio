@@ -1,0 +1,94 @@
+---
+export interface Props {
+  phrases: string[];
+  class?: string;
+  /** Delay between typing each character, in ms. */
+  typeDelay?: number;
+  /** Delay between deleting each character, in ms. */
+  deleteDelay?: number;
+  /** How long to hold a fully-typed phrase before deleting, in ms. */
+  holdDelay?: number;
+}
+
+const {
+  phrases,
+  class: className = "",
+  typeDelay = 90,
+  deleteDelay = 45,
+  holdDelay = 1600,
+} = Astro.props;
+---
+
+<span
+  class={className}
+  data-typewriter
+  data-phrases={JSON.stringify(phrases)}
+  data-type-delay={typeDelay}
+  data-delete-delay={deleteDelay}
+  data-hold-delay={holdDelay}
+>
+  <span data-typewriter-text></span><span class="_caret" aria-hidden="true">|</span>
+</span>
+
+<style>
+  ._caret {
+    animation: _blink 1s step-end infinite;
+    font-weight: 200;
+  }
+
+  @keyframes _blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<script>
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  function start(el: HTMLElement) {
+    if (el.dataset.typewriterActive) return;
+    el.dataset.typewriterActive = "true";
+
+    const phrases: string[] = JSON.parse(el.dataset.phrases ?? "[]");
+    const target = el.querySelector<HTMLElement>("[data-typewriter-text]");
+    if (!target || phrases.length === 0) return;
+
+    const TYPE_DELAY = Number(el.dataset.typeDelay ?? 90);
+    const DELETE_DELAY = Number(el.dataset.deleteDelay ?? 45);
+    const HOLD_DELAY = Number(el.dataset.holdDelay ?? 1600);
+
+    const pick = (exclude: string) => {
+      const options = phrases.filter((p) => p !== exclude);
+      const pool = options.length ? options : phrases;
+      return pool[Math.floor(Math.random() * pool.length)];
+    };
+
+    (async () => {
+      let current = "";
+      while (el.isConnected) {
+        const next = pick(current);
+        current = next;
+
+        for (let i = 1; i <= next.length && el.isConnected; i++) {
+          target.textContent = next.slice(0, i);
+          await wait(TYPE_DELAY);
+        }
+
+        await wait(HOLD_DELAY);
+
+        for (let i = next.length; i >= 0 && el.isConnected; i--) {
+          target.textContent = next.slice(0, i);
+          await wait(DELETE_DELAY);
+        }
+      }
+    })();
+  }
+
+  const init = () =>
+    document
+      .querySelectorAll<HTMLElement>("[data-typewriter]")
+      .forEach(start);
+
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>
