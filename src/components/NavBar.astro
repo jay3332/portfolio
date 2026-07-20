@@ -37,7 +37,7 @@ const { transparent = false } = Astro.props;
         <NavBarEntry href="/projects" highlight={p => p.startsWith('/projects')}>Projects</NavBarEntry>
         <NavBarEntry href="/blog" highlight={p => p.startsWith('/blog')}>Blog</NavBarEntry>
         <!-- <NavBarEntry href="/books" highlight={p => p.startsWith('/books')}>Notes</NavBarEntry> -->
-        <li class="mobile:hidden flex items-center md:ml-1">
+        <li class="mobile:hidden flex items-center">
           <ThemeToggle />
         </li>
       </ul>
