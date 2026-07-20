@@ -4,6 +4,53 @@
 @tailwind components;
 @tailwind utilities;
 
+:root,
+.dark {
+  --color-base: 0 0 0;          /* page background */
+  --color-content: 255 255 255; /* primary text / ink */
+  --color-surface: 17 22 34;    /* elevated panels, dropdowns, thumbnails */
+  --glow-alpha: 0.13;
+  color-scheme: dark;
+}
+
+.light {
+  --color-base: 255 255 255;
+  --color-content: 17 20 28;
+  --color-surface: 237 240 245;
+  --glow-alpha: 0.09;
+  color-scheme: light;
+}
+
+html.light {
+  --bc: 222 24% 12%;
+}
+
+html.dark .prose,
+html.light .prose {
+  --tw-prose-body: rgb(var(--color-content) / 0.85);
+  --tw-prose-headings: rgb(var(--color-content));
+  --tw-prose-lead: rgb(var(--color-content) / 0.8);
+  --tw-prose-links: rgb(var(--color-content));
+  --tw-prose-bold: rgb(var(--color-content));
+  --tw-prose-counters: rgb(var(--color-content) / 0.6);
+  --tw-prose-bullets: rgb(var(--color-content) / 0.4);
+  --tw-prose-hr: rgb(var(--color-content) / 0.15);
+  --tw-prose-quotes: rgb(var(--color-content) / 0.9);
+  --tw-prose-quote-borders: rgb(var(--color-content) / 0.2);
+  --tw-prose-captions: rgb(var(--color-content) / 0.6);
+  --tw-prose-code: rgb(var(--color-content));
+  --tw-prose-pre-code: rgb(var(--color-content) / 0.9);
+  --tw-prose-pre-bg: rgb(var(--color-surface));
+  --tw-prose-th-borders: rgb(var(--color-content) / 0.3);
+  --tw-prose-td-borders: rgb(var(--color-content) / 0.2);
+}
+
+html {
+  background-color: rgb(var(--color-base));
+  color: rgb(var(--color-content));
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
 @font-face {
   font-family: 'Mona Sans';
   src: url('/fonts/Mona-Sans.woff2') format('woff2');
@@ -28,8 +75,8 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-image:
-      radial-gradient(at 75% 25%, rgb(5 134 255 / 0.13) 0px, transparent 60%),
-      radial-gradient(at 10% 90%, rgb(168 45 247 / 0.13) 0px, transparent 60%);
+      radial-gradient(at 75% 25%, rgb(5 134 255 / var(--glow-alpha)) 0px, transparent 60%),
+      radial-gradient(at 10% 90%, rgb(168 45 247 / var(--glow-alpha)) 0px, transparent 60%);
 }
 
 /* main {
@@ -62,3 +109,9 @@ body::-webkit-scrollbar {
 .link {
   @apply underline text-link hover:text-link-hover transition duration-200;
 }
+
+/* Theme toggle: show the icon of the theme you can switch to.
+   Default/dark -> sun (switch to light); light -> moon (switch to dark). */
+.theme-icon-moon { display: none; }
+html.light .theme-icon-sun { display: none; }
+html.light .theme-icon-moon { display: inline-block; }

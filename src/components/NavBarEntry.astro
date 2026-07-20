@@ -9,8 +9,8 @@ const { pathname } = Astro.url;
 
 const shouldHighlight = highlight ? highlight(pathname) : pathname === href;
 const opacity = shouldHighlight ? "text-opacity-100" : "text-opacity-70";
-const className = `text-white ${opacity} hover:text-opacity-100 md:underline-offset-4 md:hover:underline transition-all
-  mobile:rounded-lg mobile:hover:bg-white/10 mobile:py-1.5 mobile:px-2 mobile:w-[128px] flex`
+const className = `text-content ${opacity} hover:text-opacity-100 md:underline-offset-4 md:hover:underline transition-all
+  mobile:rounded-lg mobile:hover:bg-content/10 mobile:py-1.5 mobile:px-2 mobile:w-[128px] flex`
 ---
 
 <li class={className}>

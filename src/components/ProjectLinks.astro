@@ -8,7 +8,7 @@ export interface Props {
 }
 const { data } = Astro.props
 const DIAG_ARROW_CLASS = 
-  "text-white -rotate-45 text-opacity-30 group-hover/btn:text-opacity-100 translate-x-0 translate-y-0 "
+  "text-content -rotate-45 text-opacity-30 group-hover/btn:text-opacity-100 translate-x-0 translate-y-0 "
   + "group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all"
 ---
 
@@ -16,7 +16,7 @@ const DIAG_ARROW_CLASS =
   {(data.repo ?? data.org) && (
     <object>
       <a
-        class="flex items-center text-sm font-semibold gap-x-1 text-white/80 hover:text-white/100 group/btn"
+        class="flex items-center text-sm font-semibold gap-x-1 text-content/80 hover:text-content/100 group/btn"
         href={`https://github.com/${data.repo ?? data.org}`}
         target="_blank"
       >
@@ -29,7 +29,7 @@ const DIAG_ARROW_CLASS =
   {data.url && (
     <object>
       <a
-        class="flex items-center text-sm font-semibold gap-x-1 text-white/80 hover:text-white/100 group/btn"
+        class="flex items-center text-sm font-semibold gap-x-1 text-content/80 hover:text-content/100 group/btn"
         href={data.url}
         target="_blank"
       >

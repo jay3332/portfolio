@@ -17,8 +17,30 @@ const SITE_URL = "https://jay3332.pages.dev"
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="bg-black text-white">
+<html lang="en" class="bg-page text-content">
   <head>
+    <!-- Set the theme before first paint to avoid a flash of the wrong theme,
+         and re-apply after each view-transition swap (Astro resets <html>'s
+         class to the new page's static class during navigation). -->
+    <script is:inline>
+      (() => {
+        const apply = () => {
+          let theme;
+          try { theme = localStorage.getItem("theme"); } catch {}
+          if (theme !== "light" && theme !== "dark") {
+            theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          }
+          const root = document.documentElement;
+          root.classList.remove("light", "dark");
+          root.classList.add(theme);
+        };
+        apply();
+        if (!window.__themeSwapBound) {
+          window.__themeSwapBound = true;
+          document.addEventListener("astro:after-swap", apply);
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />

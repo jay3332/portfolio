@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
 
 const accent = {
   DEFAULT: '#0586ff',
@@ -46,6 +47,7 @@ const secondary = {
 
 /** @type {import('tailwindcss').Config} */
 const config = {
+  darkMode: 'class',
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
@@ -54,6 +56,12 @@ const config = {
           DEFAULT: '#41a7ff',
           hover: '#86c9ff',
         },
+        // Semantic, theme-aware tokens. Values come from CSS variables in
+        // global.css and flip between the .dark and .light html classes.
+        // Alpha modifiers (e.g. text-content/50) work via <alpha-value>.
+        page: 'rgb(var(--color-base) / <alpha-value>)',
+        content: 'rgb(var(--color-content) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
         accent,
         primary,
         secondary,
@@ -86,6 +94,11 @@ const config = {
   plugins: [
     require('daisyui'),
     require('@tailwindcss/typography'),
+    // theme-light:… / theme-dark:… variants keyed off the html theme class.
+    plugin(({ addVariant }) => {
+      addVariant('theme-light', 'html.light &');
+      addVariant('theme-dark', 'html.dark &');
+    }),
   ],
 }
 

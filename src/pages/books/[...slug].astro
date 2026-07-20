@@ -52,12 +52,12 @@ const currentSlug = view === 'section' ? entry.id : null;
     <div class="flex flex-col items-center py-4 md:py-16 flex-grow w-full px-4">
       <div class="w-full max-w-3xl">
         <h1 class="text-4xl font-bold mt-4 mb-1">{bookTitle}</h1>
-        {/* <p class="text-gray-400 mb-2">{bookAuthor}</p> */}
-        <p class="text-gray-300 mb-8">{bookDescription}</p>
+        {/* <p class="text-content/60 mb-2">{bookAuthor}</p> */}
+        <p class="text-content/80 mb-8">{bookDescription}</p>
         {/* {firstSection && (
           <a
             href={`/books/${firstSection.slug}`}
-            class="inline-block bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl px-6 py-3 transition-colors mb-12"
+            class="inline-block bg-blue-600 hover:bg-blue-500 text-content font-medium rounded-xl px-6 py-3 transition-colors mb-12"
           >
             Start Reading →
           </a>
@@ -66,15 +66,15 @@ const currentSlug = view === 'section' ? entry.id : null;
           {bookChapters.map((ch, ci) => (
             <div>
               <h2 class="text-lg font-semibold mb-1">Chapter {ci + 1}: {ch.title}</h2>
-              {ch.description && <p class="text-sm text-gray-400 mb-4">{ch.description}</p>}
+              {ch.description && <p class="text-sm text-content/60 mb-4">{ch.description}</p>}
               <ul class="flex flex-col -mx-3">
                 {ch.sections.map((sec, si) => (
                   <li>
                     <a
                       href={`/books/${sec.slug}`}
-                      class="flex items-center gap-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg px-3 py-2 transition-colors"
+                      class="flex items-center gap-3 text-sm text-content/80 hover:text-content hover:bg-content/5 rounded-lg px-3 py-2 transition-colors"
                     >
-                      <span class="text-white/50 w-4 shrink-0">{ci + 1}.{si + 1}</span>
+                      <span class="text-content/50 w-4 shrink-0">{ci + 1}.{si + 1}</span>
                       {sec.title}
                     </a>
                   </li>
@@ -90,13 +90,13 @@ const currentSlug = view === 'section' ? entry.id : null;
     <div class="book-reader flex flex-col flex-grow">
 
       <!-- Mobile nav bar -->
-      <div class="book-mobile-nav xl:hidden sticky top-0 z-20 bg-black/95 border-b border-white/10 backdrop-blur px-4 py-3 flex items-center gap-3">
-        <a href={`/books/${bookSlug}`} class="text-gray-400 hover:text-white text-sm shrink-0">{bookTitle}</a>
-        <span class="text-gray-600">›</span>
+      <div class="book-mobile-nav xl:hidden sticky top-0 z-20 bg-page/95 border-b border-content/10 backdrop-blur px-4 py-3 flex items-center gap-3">
+        <a href={`/books/${bookSlug}`} class="text-content/60 hover:text-content text-sm shrink-0">{bookTitle}</a>
+        <span class="text-content/40">›</span>
         <div class="flex gap-2 flex-1 min-w-0">
           <select
             id="mobile-chapter-select"
-            class="bg-black/80 border border-white/20 text-white text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
+            class="bg-page/80 border border-content/20 text-content text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
           >
             {bookChapters.map((ch, ci) => (
               <option value={ci} selected={ci === chapterIndex}>
@@ -106,7 +106,7 @@ const currentSlug = view === 'section' ? entry.id : null;
           </select>
           <select
             id="mobile-section-select"
-            class="bg-black/80 border border-white/20 text-white text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
+            class="bg-page/80 border border-content/20 text-content text-xs rounded-lg px-2 py-1.5 flex-1 min-w-0"
           >
             {bookChapters[chapterIndex].sections.map((sec, si) => (
               <option value={sec.slug} selected={si === sectionIndex}>
@@ -118,7 +118,7 @@ const currentSlug = view === 'section' ? entry.id : null;
         <!-- Mobile TOC toggle -->
         <button
           id="mobile-toc-toggle"
-          class="shrink-0 text-gray-400 hover:text-white text-xs border border-white/20 rounded-lg px-2 py-1.5"
+          class="shrink-0 text-content/60 hover:text-content text-xs border border-content/20 rounded-lg px-2 py-1.5"
           aria-label="Table of contents"
         >
           TOC
@@ -128,16 +128,16 @@ const currentSlug = view === 'section' ? entry.id : null;
       <!-- Mobile TOC drawer -->
       <div
         id="mobile-toc-drawer"
-        class="xl:hidden hidden fixed inset-x-0 top-[calc(var(--navbar-h,48px)+48px)] z-10 bg-black/95 border-b border-white/10 px-4 py-4 max-h-64 overflow-y-auto"
+        class="xl:hidden hidden fixed inset-x-0 top-[calc(var(--navbar-h,48px)+48px)] z-10 bg-page/95 border-b border-content/10 px-4 py-4 max-h-64 overflow-y-auto"
       >
-        <p class="text-xs text-gray-500 uppercase tracking-wider mb-2">On this page</p>
+        <p class="text-xs text-content/50 uppercase tracking-wider mb-2">On this page</p>
         <nav>
           {headings.map(h => (
             <a
               href={`#${h.id}`}
               class:list={[
-                'block text-sm py-1 hover:text-white transition-colors truncate',
-                h.level === 1 ? 'text-gray-300 pl-0' : 'text-gray-500 pl-3',
+                'block text-sm py-1 hover:text-content transition-colors truncate',
+                h.level === 1 ? 'text-content/80 pl-0' : 'text-content/50 pl-3',
               ]}
             >
               {h.text}
@@ -150,13 +150,13 @@ const currentSlug = view === 'section' ? entry.id : null;
       <div class="book-layout flex flex-grow">
 
         <!-- Left sidebar: chapter/section nav -->
-        <nav class="book-nav hidden xl:flex flex-col w-60 shrink-0 border-r border-white/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-3">
-          <a href={`/books/${bookSlug}`} class="text-xs text-gray-500 hover:text-gray-300 transition-colors px-2 mb-4 block truncate">
+        <nav class="book-nav hidden xl:flex flex-col w-60 shrink-0 border-r border-content/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-3">
+          <a href={`/books/${bookSlug}`} class="text-xs text-content/50 hover:text-content/80 transition-colors px-2 mb-4 block truncate">
             ← {bookTitle}
           </a>
           {bookChapters.map((ch, ci) => (
             <div class="mb-4">
-              <p class="text-xs text-gray-500 px-2 mb-1 truncate">
+              <p class="text-xs text-content/50 px-2 mb-1 truncate">
                 {ci + 1} {ch.title}
               </p>
               <ul>
@@ -169,12 +169,12 @@ const currentSlug = view === 'section' ? entry.id : null;
                         class:list={[
                           'flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 transition-colors truncate',
                           active
-                            ? 'bg-white/10 text-white font-medium'
-                            : 'text-gray-400 hover:text-white hover:bg-white/5',
+                            ? 'bg-content/10 text-content font-medium'
+                            : 'text-content/60 hover:text-content hover:bg-content/5',
                         ]}
                         aria-current={active ? 'page' : undefined}
                       >
-                        <span class="text-gray-600 font-mono text-xs w-7 shrink-0">{ci + 1}.{si + 1}</span>
+                        <span class="text-content/40 font-mono text-xs w-7 shrink-0">{ci + 1}.{si + 1}</span>
                         <span class="truncate">{sec.title}</span>
                       </a>
                     </li>
@@ -194,18 +194,18 @@ const currentSlug = view === 'section' ? entry.id : null;
             const prev = idx > 0 ? allSections[idx - 1] : null;
             const next = idx < allSections.length - 1 ? allSections[idx + 1] : null;
             return (
-              <div class="flex justify-between text-sm text-gray-500 mb-8">
+              <div class="flex justify-between text-sm text-content/50 mb-8">
                 {prev
-                  ? <a href={`/books/${prev.slug}`} class="hover:text-white transition-colors">← {prev.title}</a>
+                  ? <a href={`/books/${prev.slug}`} class="hover:text-content transition-colors">← {prev.title}</a>
                   : <span />}
                 {next
-                  ? <a href={`/books/${next.slug}`} class="hover:text-white transition-colors">{next.title} →</a>
+                  ? <a href={`/books/${next.slug}`} class="hover:text-content transition-colors">{next.title} →</a>
                   : <span />}
               </div>
             );
           })()}
 
-          <article class="prose lg:prose-lg prose-invert max-w-full htmlmathparagraph font-serif [&>*>img]:!rounded-2xl">
+          <article class="prose lg:prose-lg max-w-full htmlmathparagraph font-serif [&>*>img]:!rounded-2xl">
             {Content && <Content />}
           </article>
 
@@ -216,12 +216,12 @@ const currentSlug = view === 'section' ? entry.id : null;
             const prev = idx > 0 ? allSections[idx - 1] : null;
             const next = idx < allSections.length - 1 ? allSections[idx + 1] : null;
             return (
-              <div class="flex justify-between text-sm text-gray-500 mt-12 pt-6 border-t border-white/10">
+              <div class="flex justify-between text-sm text-content/50 mt-12 pt-6 border-t border-content/10">
                 {prev
-                  ? <a href={`/books/${prev.slug}`} class="hover:text-white transition-colors">← {prev.title}</a>
+                  ? <a href={`/books/${prev.slug}`} class="hover:text-content transition-colors">← {prev.title}</a>
                   : <span />}
                 {next
-                  ? <a href={`/books/${next.slug}`} class="hover:text-white transition-colors">{next.title} →</a>
+                  ? <a href={`/books/${next.slug}`} class="hover:text-content transition-colors">{next.title} →</a>
                   : <span />}
               </div>
             );
@@ -229,22 +229,22 @@ const currentSlug = view === 'section' ? entry.id : null;
         </main>
 
         <!-- Right sidebar: TOC -->
-        <aside class="book-toc hidden xl:flex flex-col w-52 shrink-0 border-l border-white/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-4">
-          <p class="text-xs text-gray-500 uppercase tracking-wider mb-3">On this page</p>
+        <aside class="book-toc hidden xl:flex flex-col w-52 shrink-0 border-l border-content/10 sticky top-[var(--navbar-h,64px)] h-[calc(100vh-var(--navbar-h,64px))] overflow-y-auto py-6 px-4">
+          <p class="text-xs text-content/50 uppercase tracking-wider mb-3">On this page</p>
           <nav class="flex flex-col gap-0.5">
             {headings.map(h => (
               <a
                 href={`#${h.id}`}
                 class:list={[
-                  'text-xs py-1 hover:text-white transition-colors leading-snug',
-                  h.level === 1 ? 'text-gray-400 pl-0' : 'text-gray-600 pl-3',
+                  'text-xs py-1 hover:text-content transition-colors leading-snug',
+                  h.level === 1 ? 'text-content/60 pl-0' : 'text-content/40 pl-3',
                 ]}
               >
                 {h.text}
               </a>
             ))}
             {headings.length === 0 && (
-              <span class="text-xs text-gray-600 italic">No headings</span>
+              <span class="text-xs text-content/40 italic">No headings</span>
             )}
           </nav>
         </aside>
@@ -268,7 +268,7 @@ const currentSlug = view === 'section' ? entry.id : null;
           const id = entry.target.id;
           tocLinks.forEach(a => {
             const active = a.getAttribute('href') === `#${id}`;
-            a.classList.toggle('!text-white', active);
+            a.classList.toggle('!text-content', active);
           });
           break;
         }

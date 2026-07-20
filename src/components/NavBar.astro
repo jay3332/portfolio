@@ -1,6 +1,7 @@
 ---
 import { Astronav, MenuItems, MenuIcon, Dropdown, DropdownItems } from "astro-navbar";
 import NavBarEntry from "./NavBarEntry.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { Icon } from "astro-icon/components"
 
 export interface Props {
@@ -10,7 +11,7 @@ export interface Props {
 const { transparent = false } = Astro.props;
 ---
 
-<header class={`md:flex justify-center p-2 gap-5 ${transparent ? "" : "bg-gray-900/60"}`}>
+<header class={`md:flex justify-center p-2 gap-5 ${transparent ? "" : "bg-surface/60"}`}>
   <Astronav closeOnClick>
     <div class="flex w-full items-center justify-between">
       <a href="/" class="px-3 flex items-center gap-x-3 group">
@@ -22,12 +23,13 @@ const { transparent = false } = Astro.props;
           Jaysen Tsao
         </span>}
       </a>
-      <div class="block md:hidden p-3">
-        <MenuIcon class="w-4 h-4 text-white text-opacity-70 hover:text-opacity-100 transition-all" />
+      <div class="flex items-center gap-4 md:hidden p-3">
+        <ThemeToggle />
+        <MenuIcon class="w-4 h-4 text-content text-opacity-70 hover:text-opacity-100 transition-all" />
       </div>
     </div>
     <MenuItems
-      class="hidden md:flex md:p-3 md:m-0 mr-3 md:static bg-gray-900 md:bg-transparent rounded-xl absolute right-0 z-50"
+      class="hidden md:flex md:p-3 md:m-0 mr-3 md:static bg-surface md:bg-transparent rounded-xl absolute right-0 z-50"
     >
       <ul class="_navlist flex flex-col md:flex-row md:gap-5 md:p-0 p-2">
         <NavBarEntry href="/">Home</NavBarEntry>
@@ -35,6 +37,9 @@ const { transparent = false } = Astro.props;
         <NavBarEntry href="/projects" highlight={p => p.startsWith('/projects')}>Projects</NavBarEntry>
         <NavBarEntry href="/blog" highlight={p => p.startsWith('/blog')}>Blog</NavBarEntry>
         <!-- <NavBarEntry href="/books" highlight={p => p.startsWith('/books')}>Notes</NavBarEntry> -->
+        <li class="mobile:hidden flex items-center md:ml-1">
+          <ThemeToggle />
+        </li>
       </ul>
     </MenuItems>
   </Astronav>
@@ -48,11 +53,3 @@ const { transparent = false } = Astro.props;
     }
   }
 </style>
-
-<script>
-
-  document.addEventListener("click", (e) => {
-
-
-  })
-</script>

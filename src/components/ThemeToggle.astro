@@ -1,0 +1,44 @@
+---
+import { Icon } from "astro-icon/components";
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  aria-label="Toggle color theme"
+  title="Toggle color theme"
+  class={`grid place-items-center rounded-lg text-content/70 hover:text-content transition-colors ${className}`}
+>
+  {/* Both icons are stacked; CSS shows the one for the theme you can switch to. */}
+  <Icon name="sun" class="theme-icon theme-icon-sun col-start-1 row-start-1 text-lg" />
+  <Icon name="moon" class="theme-icon theme-icon-moon col-start-1 row-start-1 text-lg" />
+</button>
+
+<script>
+  // Delegated + attached to `document`, which persists across Astro view
+  // transitions, so it keeps working after client-side navigation.
+  function setTheme(theme: "light" | "dark") {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
+  }
+
+  if (!(window as any).__themeToggleBound) {
+    (window as any).__themeToggleBound = true;
+    document.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement)?.closest("[data-theme-toggle]");
+      if (!btn) return;
+      const isLight = document.documentElement.classList.contains("light");
+      setTheme(isLight ? "dark" : "light");
+    });
+  }
+</script>

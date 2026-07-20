@@ -26,10 +26,10 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
 <Layout title="Projects">
   <section class="relative overflow-hidden">
     <div class="relative z-[1] mx-auto w-full max-w-[130ch] px-8 pt-12 pb-20">
-      <h1 class="hero-title mb-[0.6rem] text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.01em] text-white/90">
+      <h1 class="hero-title mb-[0.6rem] text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.01em] text-content/90">
         Personal Projects
       </h1>
-      <p class="mb-6 max-w-[55ch] text-[0.95rem] leading-[1.65] text-white/50">
+      <p class="mb-6 max-w-[55ch] text-[0.95rem] leading-[1.65] text-content/50">
         A few open-source software projects I've worked on over the past years.
       </p>
       <div class="flex flex-wrap gap-3">
@@ -42,7 +42,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
   <section id="arc" class="relative mx-auto max-w-[130ch] overflow-x-clip px-8 pt-2 pb-24">
     <div
       id="tl-track"
-      class="absolute hidden lg:block top-12 bottom-12 w-[2px] rounded-[1px] bg-white/[0.07] left-1/2 -translate-x-1/2"
+      class="absolute hidden lg:block top-12 bottom-12 w-[2px] rounded-[1px] bg-content/[0.07] left-1/2 -translate-x-1/2"
       aria-hidden="true"
     ></div>
 
@@ -81,7 +81,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
                   </a>
                 </h2>
               </div>
-              <time class="mb-2 block text-[0.65rem] font-bold uppercase tracking-[0.1em] text-white/40 lg:hidden">{project.data.timeline}</time>
+              <time class="mb-2 block text-[0.65rem] font-bold uppercase tracking-[0.1em] text-content/40 lg:hidden">{project.data.timeline}</time>
               <p class="entry-desc">{project.data.description}</p>
               <div class="entry-skills-row">
                 <ProjectSkills skills={project.data.skills} />
@@ -89,7 +89,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
               <div class="entry-actions">
                 <a
                   href={`/projects/${project.id}`}
-                  class="btn btn-sm btn-outline group border-white/20"
+                  class="btn btn-sm btn-outline group border-content/20"
                 >
                   View Project
                   <Icon name="arrow-right" class="transition-transform group-hover:translate-x-0.5" />
@@ -129,7 +129,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
       </div>
       <a
         href="/projects/all"
-        class="hidden whitespace-nowrap text-[0.85rem] font-semibold text-white/60 transition-colors hover:text-white sm:block"
+        class="hidden whitespace-nowrap text-[0.85rem] font-semibold text-content/60 transition-colors hover:text-content sm:block"
       >
         View all <Icon name="arrow-right" class="ml-0.5 inline-block align-middle" />
       </a>
@@ -142,7 +142,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
       {otherProjects.map(project => (
         <a
           href={`/projects/${project.id}`}
-          class="group flex min-w-[21rem] max-w-[21rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-transparent p-0 text-inherit no-underline [scroll-snap-align:start] transition-[border-color,background] duration-200 hover:border-white/15 hover:bg-white/[0.06]"
+          class="group flex min-w-[21rem] max-w-[21rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-content/[0.08] bg-transparent p-0 text-inherit no-underline [scroll-snap-align:start] transition-[border-color,background] duration-200 hover:border-content/15 hover:bg-content/[0.06]"
         >
           <div class="relative h-[7.5rem] shrink-0">
             {project.data.thumbnail
@@ -155,7 +155,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
                   class="block h-full w-full object-cover"
                 />
               ) : (
-                <div class="h-full w-full bg-gradient-to-br from-[#12182a] to-[#0a0e1a]" />
+                <div class="h-full w-full bg-gradient-to-br from-surface to-page" />
               )
             }
           </div>
@@ -176,13 +176,13 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
                 </span>
                 <Icon
                   name="arrow-right"
-                  class="shrink-0 text-white/35 transition-[transform,color] duration-200 group-hover:translate-x-[3px] group-hover:text-white"
+                  class="shrink-0 text-content/35 transition-[transform,color] duration-200 group-hover:translate-x-[3px] group-hover:text-content"
                 />
               </div>
-              <p class="mb-2 text-[0.65rem] text-white/45">
+              <p class="mb-2 text-[0.65rem] text-content/45">
                 {project.data.timeline}
               </p>
-              <p class="mb-3 flex-1 text-[0.9rem] leading-[1.55] text-white/75">
+              <p class="mb-3 flex-1 text-[0.9rem] leading-[1.55] text-content/75">
                 {project.data.description}
               </p>
               <div class="flex flex-wrap gap-[0.3rem]">
@@ -315,7 +315,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
 
   .name-arrow {
     font-size: 1.4rem;
-    color: rgb(255 255 255 / 0.35);
+    color: rgb(var(--color-content) / 0.35);
     transition: transform 200ms ease, color 200ms ease;
     margin-top: 0.1rem;
     flex-shrink: 0;
@@ -327,7 +327,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
   }
 
   .entry-desc {
-    color: rgb(255 255 255 / 0.75);
+    color: rgb(var(--color-content) / 0.75);
     line-height: 1.65;
     max-width: 52ch;
     margin-bottom: 1.1rem;
@@ -362,7 +362,6 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 0.875rem;
-    box-shadow: 0 4px 14px rgb(0 0 0 / 0.45);
     flex-shrink: 0;
     display: block;
   }
@@ -408,7 +407,7 @@ const ACCENT: Record<string, { rgb: string; dot: string }> = {
     background:
       radial-gradient(circle at 30% 35%, rgba(var(--rgb), 0.4), transparent 45%),
       radial-gradient(circle at 72% 62%, rgb(168 85 247 / 0.2), transparent 45%),
-      linear-gradient(145deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01));
+      linear-gradient(145deg, rgb(var(--color-content) / 0.05), rgb(var(--color-content) / 0.01));
     box-shadow: 0 20px 48px rgb(0 0 0 / 0.35);
     transform: rotate(-1.5deg);
   }

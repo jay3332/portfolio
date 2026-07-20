@@ -22,15 +22,15 @@ const allSkills = [
     <h1 class="font-title text-4xl py-6 font-black">Project Catalog</h1>
     <div class="mb-4">
       <div class="flex flex-col gap-1.5 md:flex-row md:items-start md:gap-3">
-        <span class="shrink-0 text-sm uppercase tracking-wider text-white/40 md:leading-8">Filter by Skill</span>
+        <span class="shrink-0 text-sm uppercase tracking-wider text-content/40 md:leading-8">Filter by Skill</span>
         <div class="flex min-w-0 flex-1 items-start gap-2">
           <div
             id="skills-container"
             class="skills-container is-collapsed flex min-w-0 flex-1 flex-wrap gap-2 overflow-hidden transition-[max-height] duration-200"
           >
             <button
-              class="skill-filter is-active rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
-                text-white/70 transition hover:border-white/35 hover:text-white/95"
+              class="skill-filter is-active rounded-full border border-content/15 bg-content/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
+                text-content/70 transition hover:border-content/35 hover:text-content/95"
               type="button"
               data-skill="all"
             >
@@ -38,8 +38,8 @@ const allSkills = [
             </button>
             {allSkills.map((skill) => (
               <button
-                class="skill-filter rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
-                  text-white/70 transition hover:border-white/35 hover:text-white/95"
+                class="skill-filter rounded-full border border-content/15 bg-content/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] 
+                  text-content/70 transition hover:border-content/35 hover:text-content/95"
                 type="button"
                 data-skill={skill.value}
               >
@@ -49,7 +49,7 @@ const allSkills = [
           </div>
           <button
             id="skills-toggle"
-            class="hidden min-h-8 shrink-0 items-center gap-2 whitespace-nowrap text-xs font-bold text-white/75 transition-colors hover:text-white/95"
+            class="hidden min-h-8 shrink-0 items-center gap-2 whitespace-nowrap text-xs font-bold text-content/75 transition-colors hover:text-content/95"
             type="button"
             aria-expanded="false"
           >

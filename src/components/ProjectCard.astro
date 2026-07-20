@@ -16,8 +16,8 @@ const { slug, project } = Astro.props;
   class:list={[
     "flex flex-col rounded-xl group transition-all box-border cursor-pointer overflow-hidden",
     slug === project.id
-      ? "current-card bg-gradient-to-br from-transparent to-gray-900"
-      : "bg-gradient-to-br from-transparent to-transparent hover:to-white/20",
+      ? "current-card bg-gradient-to-br from-transparent to-surface"
+      : "bg-gradient-to-br from-transparent to-transparent hover:to-content/20",
     project ? "max-w-[48ch]" : "mobile:w-full"
   ]}
 >
@@ -25,7 +25,7 @@ const { slug, project } = Astro.props;
     <div class="h-36 flex-shrink-0">
       {project.data.thumbnail
         ? <img src={project.data.thumbnail} alt="" loading="lazy" decoding="async" class="w-full h-full object-cover" />
-        : <div class="w-full h-full" style="background: linear-gradient(135deg, rgb(18 24 42), rgb(10 14 26))" />
+        : <div class="w-full h-full" style="background: linear-gradient(135deg, rgb(var(--color-surface)), rgb(var(--color-base)))" />
       }
     </div>
   )}
@@ -49,7 +49,7 @@ const { slug, project } = Astro.props;
         </h2>
         <span class="text-xs font-bold uppercase opacity-60">{project.data.timeline}</span>
       </div>
-      <p class="font-light text-sm text-white/80 mt-0.5 flex-grow">{project.data.description}</p>
+      <p class="font-light text-sm text-content/80 mt-0.5 flex-grow">{project.data.description}</p>
       <ProjectLinks data={project.data} />
       <div class="flex flex-wrap gap-1 mt-3">
         <ProjectSkills skills={project.data.skills} />

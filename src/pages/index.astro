@@ -11,7 +11,7 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:
     <NavBar transparent={true} />
     <div id="banner-drag-area" class="flex flex-col pb-24 items-center justify-center h-full relative">
       <h1 class="mx-4 font-title font-black text-8xl mobile:text-6xl select-none bg-gradient-to-b
-        from-white/60 to-white/100 bg-clip-text text-transparent [view-transition-name:my-name]"
+        from-content/60 to-content/100 bg-clip-text text-transparent [view-transition-name:my-name]"
       >
         Jaysen Tsao
       </h1>
@@ -22,7 +22,7 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:
     </div>
     <canvas id="3d" class="absolute overflow-hidden box-border -z-10 pointer-events-auto opacity-60" />
   </div>
-  <div class="self-center rounded-full px-4 py-3 hover:bg-gray-900 -m-8 opacity-40 hover:opacity-100 transition">
+  <div class="self-center rounded-full px-4 py-3 hover:bg-surface -m-8 opacity-40 hover:opacity-100 transition">
     <Socials />
   </div>
 </Layout>
@@ -30,8 +30,8 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:
 <style>
   body {
     background-image:
-      radial-gradient(at 65% 35%, rgb(5 134 255 / 0.14) 0px, transparent 60%),
-      radial-gradient(at 35% 65%, rgb(168 45 247 / 0.14) 0px, transparent 60%) !important;
+      radial-gradient(at 65% 35%, rgb(5 134 255 / calc(var(--glow-alpha) + 0.01)) 0px, transparent 60%),
+      radial-gradient(at 35% 65%, rgb(168 45 247 / calc(var(--glow-alpha) + 0.01)) 0px, transparent 60%) !important;
   }
 </style>
 
@@ -73,7 +73,9 @@ const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:
 
   function refreshElements() {
     const banner = document.getElementById("banner")!
-    renderer = new THREE.WebGLRenderer({ canvas });
+    // alpha so the canvas clears transparent instead of opaque black, which
+    // otherwise reads as a gray wash over the light theme (opacity-60 on black).
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
     renderer.setSize(banner.clientWidth, banner.clientHeight);
     document.body.appendChild(renderer.domElement);
 
