@@ -27,7 +27,7 @@ html.light {
 
 html.dark .prose,
 html.light .prose {
-  --tw-prose-body: rgb(var(--color-content) / 0.85);
+  --tw-prose-body: rgb(var(--color-content) / 0.75);
   --tw-prose-headings: rgb(var(--color-content));
   --tw-prose-lead: rgb(var(--color-content) / 0.8);
   --tw-prose-links: rgb(var(--color-content));

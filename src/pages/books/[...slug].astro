@@ -47,7 +47,13 @@ const firstSection = bookChapters[0]?.sections[0];
 const currentSlug = view === 'section' ? entry.id : null;
 ---
 
-<Layout title={view === 'section' ? `${title} — ${bookTitle}` : bookTitle}>
+<Layout
+  title={view === 'section' ? `${title} — ${bookTitle}` : bookTitle}
+  description={view === 'section'
+    ? `${title} — from ${bookTitle} by ${bookAuthor}. ${bookDescription}`
+    : bookDescription}
+  type="article"
+>
   {view === 'book' ? (
     <div class="flex flex-col items-center py-4 md:py-16 flex-grow w-full px-4">
       <div class="w-full max-w-3xl">

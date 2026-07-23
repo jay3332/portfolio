@@ -6,14 +6,76 @@ import '../styles/global.css';
 
 export interface Props {
   title: string;
+  description?: string;
+  image?: string;
+  /** og:type, use 'article' for blog posts. */
+  type?: 'website' | 'article';
+  /** set for pages that shouldn't be indexed (e.g. 404). */
+  noindex?: boolean;
+  /** ISO date, used for og:article:published_time. */
+  publishedTime?: string;
   navbar?: 'hide' | 'transparent' | 'show';
   showFooter?: boolean;
 }
 
-const { title, navbar = 'show', showFooter = true } = Astro.props;
-const META_MESSAGE = "A student developer, interested in full-stack software and embedded development. This portfolio showcases my projects and accomplishments.";
-const EXTERNAL_ICON = "https://github.com/jay3332/jay3332/blob/main/jay3332_circle.png?raw=true";
-const SITE_URL = "https://jay3332.pages.dev"
+const {
+  title,
+  description = "Hey! I'm an ambitious student, interested in software engineering, compilers, math, startups, and more. This website is my personal portfolio and blog.",
+  image = "/jay3332_circle.png",
+  type = "website",
+  noindex = false,
+  publishedTime,
+  navbar = 'show',
+  showFooter = true,
+} = Astro.props;
+
+const SITE_NAME = "Jaysen Tsao";
+const origin = Astro.site ?? new URL("https://jay3332.tech");
+const canonicalURL = new URL(Astro.url.pathname, origin);
+const imageURL = new URL(image, origin);
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} — ${SITE_NAME}`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${origin.origin}/#website`,
+      url: origin.origin,
+      name: SITE_NAME,
+      description,
+      publisher: { "@id": `${origin.origin}/#person` },
+    },
+    {
+      "@type": "Person",
+      "@id": `${origin.origin}/#person`,
+      name: "Jaysen Tsao",
+      alternateName: "jay3332",
+      url: origin.origin,
+      image: new URL("/jay3332_circle.png", origin).href,
+      jobTitle: "Software Engineer",
+      affiliation: { "@type": "CollegeOrUniversity", name: "Carnegie Mellon University" },
+      sameAs: [
+        "https://github.com/jay3332",
+        "https://www.linkedin.com/in/jay3332",
+      ],
+    },
+    ...(type === "article"
+      ? [{
+          "@type": "BlogPosting",
+          "@id": `${canonicalURL.href}#article`,
+          headline: title,
+          description,
+          image: imageURL.href,
+          url: canonicalURL.href,
+          ...(publishedTime ? { datePublished: publishedTime } : {}),
+          author: { "@id": `${origin.origin}/#person` },
+          publisher: { "@id": `${origin.origin}/#person` },
+          mainEntityOfPage: canonicalURL.href,
+        }]
+      : []),
+  ],
+};
 ---
 
 <!DOCTYPE html>
@@ -45,26 +107,38 @@ const SITE_URL = "https://jay3332.pages.dev"
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Jaysen Tsao (jay3332)">
-    <meta name="description" content={META_MESSAGE}>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description}>
+    <meta name="author" content="Jaysen Tsao">
     <meta name="theme-color" content="#0a0e16">
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"}>
+    <link rel="canonical" href={canonicalURL}>
 
     <!-- Open Graph / Facebook / Discord -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content={SITE_URL}>
-    <meta property="og:title" content="Jaysen Tsao (jay3332)">
-    <meta property="og:description" content={META_MESSAGE}>
-    <meta property="og:image" content={EXTERNAL_ICON}>
-    <meta property="og:image:alt" content="jay3332 logo">
+    <meta property="og:type" content={type}>
+    <meta property="og:url" content={canonicalURL}>
+    <meta property="og:title" content={fullTitle}>
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content={imageURL}>
+    <meta property="og:image:alt" content="Jaysen Tsao">
     <meta property="og:site_name" content="Jaysen Tsao">
+    <meta property="og:locale" content="en_US">
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 
     <!-- Twitter -->
-    <meta property="twitter:url" content={SITE_URL}>
-    <meta property="twitter:title" content="Jaysen Tsao (jay3332)">
-    <meta property="twitter:description" content={META_MESSAGE}>
-    <meta property="twitter:image" content={EXTERNAL_ICON}>
-    <meta property="twitter:image:alt" content="jay3332 logo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content={canonicalURL}>
+    <meta name="twitter:title" content={fullTitle}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={imageURL}>
+    <meta name="twitter:image:alt" content="Jaysen Tsao">
+
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 
     <!-- KaTeX -->
     <!-- <link
@@ -77,7 +151,6 @@ const SITE_URL = "https://jay3332.pages.dev"
     <ClientRouter />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <title>{title}</title>
   </head>
   <body class="m-0 font-sans flex flex-col min-h-[100vh]">
     {navbar === 'hide'

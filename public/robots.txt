@@ -2,7 +2,6 @@ User-agent: baidu
 crawl-delay: 1
 
 User-agent: *
-Allow: /*
-Disallow:
+Allow: /
 
-Sitemap: https://jay3332.dev/sitemap-0.xml
+Sitemap: https://jay3332.tech/sitemap-index.xml

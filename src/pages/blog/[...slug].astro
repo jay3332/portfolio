@@ -23,7 +23,13 @@ if (!entry)
 const { Content } = await render(entry);
 ---
 
-<Layout title={entry.data.title}>
+<Layout
+  title={entry.data.title}
+  description={entry.data.brief}
+  type="article"
+  image={entry.data.thumbnail}
+  publishedTime={entry.data.date?.toISOString()}
+>
   <div class="flex flex-col items-center py-8 flex-grow w-full px-4">
     <article class="prose lg:prose-lg md:max-w-[76ch] max-w-full htmlmathparagraph font-serif mt-10 [&>*>img]:!rounded-2xl">
       <h1 class="text-3xl font-title font-extrabold text-left w-full">{entry.data.title}</h1>

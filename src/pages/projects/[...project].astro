@@ -24,7 +24,11 @@ if (!entry)
 const { Content } = await render(entry);
 ---
 
-<Layout title="Jaysen Tsao: Projects">
+<Layout
+  title={`${entry.data.name} — Projects`}
+  description={entry.data.description}
+  image={entry.data.thumbnail}
+>
   <div class="flex flex-grow h-[calc(100lvh-4rem-8rem)]">
     <div class="tablet:hidden overflow-x-hidden overflow-y-auto p-2 h-full flex-grow flex flex-col items-end">
       <div class="flex flex-col gap-y-3">

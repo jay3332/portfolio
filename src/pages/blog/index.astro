@@ -8,7 +8,7 @@ const blogs = [
 ].sort((a, b) => (b.data.date ?? new Date()).getTime() - (a.data.date ?? new Date()).getTime());
 ---
 
-<Layout title="Jaysen Tsao: Blog">
+<Layout title="Jaysen Tsao: Blog" description="A few of my thoughts">
   {blogs.map(blog => (
     <a href={`/blog/${blog.id}`} class="block p-4 rounded-lg hover:bg-content/5 transition-colors">
       <h2 class="text-2xl font-semibold">{blog.data.title}</h2>

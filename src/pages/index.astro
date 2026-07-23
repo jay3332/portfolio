@@ -6,7 +6,11 @@ import Socials from '../components/Socials.astro';
 const BANNER_LINK_STYLE = "font-medium underline-offset-4 hover:underline hover:-translate-y-1 transition-transform"
 ---
 
-<Layout title="Jaysen Tsao: Home" navbar="hide" showFooter={false}>
+<Layout
+  title="Jaysen Tsao"
+  navbar="hide"
+  showFooter={false}
+>
   <div id="banner" class="h-[calc(100vh-36px)] overflow-hidden box-border relative">
     <NavBar transparent={true} />
     <div id="banner-drag-area" class="flex flex-col pb-24 items-center justify-center h-full relative">

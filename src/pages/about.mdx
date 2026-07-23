@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/Article.astro
 title: "Jaysen Tsao: About"
+description: "A few things about me"
 ---
 
 import { Icon } from "astro-icon/components"
@@ -14,24 +15,28 @@ import Typewriter from "../components/Typewriter.astro"
     </span>
     # <span class="font-title bg-gradient-to-tl from-content/100 to-content/50 text-transparent bg-clip-text [view-transition-name:my-name]">Jaysen Tsao</span>
 
-    {/* Hey! I'm a {Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_000 / 365)}-year old student who is interested in full-stack software and embedded development.
-    I created this portfolio to showcase and elaborate on my projects and accomplishments. */}
-    I'm a freshman at <a href="//cmu.edu">Carnegie Mellon University</a> studying
+    I'm a {Math.floor((Date.now() - new Date(2008, 1, 28).getTime()) / 86_400_000 / 365)}-year
+    old student  at <a href="//cmu.edu">Carnegie Mellon University</a> studying
     computer science and robotics. My interests are in backend software engineering,
     distributed systems, compilers, machine learning, and mathematics.
 
-    
+    Currently, I'm self-studying cloud computing, abstract linear algebra, and machine learning.
+    I'm also revisiting some old hobbies such as typeracing, speedcubing, and gymming.
   </div>
 
   <img src="/jay3332_circle.png" alt="" class="rounded-full w-32 h-32 mobile:hidden" />
 </div>
 
-## What I'm working on
+### What I'm working on
 
 I'm currently working on a few open-source [projects](/projects), notably:
 - [Adapt, a privacy-first social platform](/projects/adapt)
 - [RIL, an image processing library for Rust](/projects/ril)
 - [the Terbium Programming Language](/projects/terbium)
+
+{/* ### Other notable things
+ */}
+
 
 {/* ## Development
 
